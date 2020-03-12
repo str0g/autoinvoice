@@ -17,24 +17,22 @@ Development
 --------------------
 
 ### Resource for tests
-tests/
-├── config
-├── config_apiregon
-├── dbase.db
-├── dbase.sql
-├── dbase_table.sql
-├── template1.tex
-└── text-5261040828.tex
+tests/  
+├── config  
+├── config_apiregon  
+├── dbase.db  
+├── dbase.sql  
+├── dbase_table.sql  
+├── template1.tex  
+└── text-5261040828.tex  
 
 
 ### Storing new test data for later dbase usage
-sqlite3 dbase
->>> .output dbase.sql
->>> .dump
-
-or
-
->>> .du
+sqlite3 dbase  
+>``.output dbase.sql``  
+>``.dump``  
+or  
+>``.du``
 
 ### Restoring database
 sqlite3 dbase.db < dbase.sql
