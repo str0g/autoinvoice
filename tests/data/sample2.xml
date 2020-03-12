@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<root>
+        <dane>
+        <Regon>xxxxxxxxx</Regon>
+        <Nip>nnnnnnnnnn</Nip>
+        <StatusNip />
+        <Nazwa>AAAAAAAA</Nazwa>
+        <Wojewodztwo>LUBELSKIE</Wojewodztwo>
+        <Powiat>kraśnicki</Powiat>
+        <Gmina>Kraśnik</Gmina>
+        <Miejscowosc>Kraśnik</Miejscowosc>
+        <KodPocztowy>23-200</KodPocztowy>
+        <Ulica>ul. Test-Wilcza</Ulica>
+        <NrNieruchomosci>yy</NrNieruchomosci>
+        <NrLokalu />
+        <Typ>F</Typ>
+        <SilosID>1</SilosID>
+        <DataZakonczeniaDzialalnosci />
+        </dane>
+        <dane>
+        <Regon>xxxxxxxxx</Regon>
+        <Nip>nnnnnnnnnn</Nip>
+        <StatusNip />
+        <Nazwa>GOSPODARSTWO ROLNE</Nazwa>
+        <Wojewodztwo>LUBELSKIE</Wojewodztwo>
+        <Powiat>kraśnicki</Powiat>
+        <Gmina>Zakrzówek</Gmina>
+        <Miejscowosc>Sulów</Miejscowosc>
+        <KodPocztowy>23-213</KodPocztowy>
+        <NrNieruchomosci>zz</NrNieruchomosci>
+        <NrLokalu />
+        <Typ>F</Typ>
+        <SilosID>2</SilosID>
+        <DataZakonczeniaDzialalnosci />
+        </dane>
+</root>

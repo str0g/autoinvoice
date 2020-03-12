@@ -1,0 +1,11 @@
+[Common]
+use_database=True
+
+[Paths]
+database=~/.autoinvoice/dbase.db
+#leave empty to use one provided in small buisness set, package(polishinvoice https://github.com/str0g/polishinvoice)
+template=
+
+[Refere]
+taxpayerid=
+name=

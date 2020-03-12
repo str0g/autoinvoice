@@ -1,0 +1,13 @@
+[Common]
+url=https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc
+key=abcde12345abcde12345
+register=PL
+
+[Paths]
+database=/tmp/.autoinvoice/dbase.db
+#leave empty to use one provided in small buisness set, package(polishinvoice https://github.com/str0g/polishinvoice)
+template=tests/data/template1.tex
+
+[Refere]
+taxpayerid=5222680297
+name=Łukasz Buśko

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<root>
+  <dane>
+    <Regon>000331501</Regon>
+    <Nip>5261040828</Nip>
+    <StatusNip />
+    <Nazwa>GŁÓWNY URZĄD STATYSTYCZNY</Nazwa>
+    <Wojewodztwo>MAZOWIECKIE</Wojewodztwo>
+    <Powiat>m. st. Warszawa</Powiat>
+    <Gmina>Śródmieście</Gmina>
+    <Miejscowosc>Warszawa</Miejscowosc>
+    <KodPocztowy>00-925</KodPocztowy>
+    <Ulica>ul. Test-Krucza</Ulica>
+    <NrNieruchomosci>208</NrNieruchomosci>
+    <NrLokalu />
+    <Typ>P</Typ>
+    <SilosID>6</SilosID>
+    <DataZakonczeniaDzialalnosci />
+    </dane>
+</root>
