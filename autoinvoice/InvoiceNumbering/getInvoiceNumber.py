@@ -1,4 +1,5 @@
-#! /bin/sh
+# -*- coding: utf-8 -*-
+
 #################################################################################
 #    Autoinvoice is a program to automate invoicing process                     #
 #    Copyright (C) 2019  Łukasz Buśko                                           #
@@ -17,20 +18,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-function test {
-	$1
-#	if [ $? -ne 0 ]; then
-#		exit $?
-#	fi
-}
+def getInvoiceNumber(options) -> dict:
+    '''
+    Plugin name
+    '''
 
-rm -r $(find . -name "__pycache__" -type d)
-find . -name "*.pyc" -type f -exec rm {} \;
+    if not options.invoice_numbering:
+        return None
 
-test "python3 -m unittest tests/test_ICompanyRegister.py"
-test "python3 -m unittest tests/test_Poland.py"
-test "python3 -m unittest tests/test_CompanyRegisterPluginManager.py"
-test "python3 -m unittest tests/test_database.py"
-test "python3 -m unittest tests/test_driver.py"
-test "python3 -m unittest tests/test_cmdline.py"
-test "python3 -m unittest tests/test_path_to_number.py"
+    import sys
+    sys.path.append('InvoiceNumbering')
+    from .path_to_number import PathToNumber
+    
+    dic = {
+            'path_to_number' : PathToNumber
+            }
+
+    return {
+            'invoice_number' : dic[options.invoice_numbering](options).get_invoice_number()
+            }

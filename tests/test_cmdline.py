@@ -83,6 +83,9 @@ url =
 key = 
 register = PL
 
+[Plugins]
+invoice_numbering = 
+
 [Paths]
 database = ~/.autoinvoice/dbase.db
 template = /usr/share/polishinvoice/templates/simple.tex
@@ -113,13 +116,16 @@ class TestInputValidation(unittest.TestCase):
 
         self.default_opt_parser_output = {'generate': None, 'update': None, 'configuration': 'this-file-does-not-exist',
                 'database': self.database, 'template': '/usr/share/polishinvoice/templates/simple.tex', 'output' : None,
-                'taxpayerid': '', 'verbose': True, 'name' : '', 'url' : '' , 'key' : '', 'register' : 'PL'}
+                'taxpayerid': '', 'verbose': True, 'name' : '', 'url' : '' , 'key' : '', 'register' : 'PL', 'invoice_numbering' : ''}
 
         self.default_config_output = '''\
 [Common]
 url = 
 key = 
 register = PL
+
+[Plugins]
+invoice_numbering = 
 
 [Paths]
 database = ~/.autoinvoice/dbase.db
@@ -142,6 +148,9 @@ CompletedProcess(args={}, returncode=0)'''
 url = 
 key = 
 register = PL
+
+[Plugins]
+invoice_numbering = 
 
 [Paths]
 database = /tmp/.autoinvoice/dbase.db
@@ -176,7 +185,7 @@ name = Łukasz Buśko\
         custom_opt_parser_output = {'generate': None, 'update': None, 'configuration': test_config,
                 'database': self.database, 'template': test_template, 'output' : None,
                 'taxpayerid': '5222680297', 'verbose': True, 'name' : 'Łukasz Buśko',
-                'url' : '' , 'key' : '', 'register' : 'PL'}
+                'url' : '' , 'key' : '', 'register' : 'PL', 'invoice_numbering' : ''}
 
         with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:
             out = proc.stdout.read().decode('utf-8').split('\n')
@@ -203,12 +212,16 @@ name = Łukasz Buśko\
         self.default_opt_parser_output['key'] = 'abcde12345abcde12345'
         self.default_opt_parser_output['taxpayerid'] = '5222680297'
         self.default_opt_parser_output['name'] = 'Łukasz Buśko'
+        self.default_opt_parser_output['invoice_numbering'] = ''
         self.maxDiff = None
         custom_config_output = '''\
 [Common]
 url = https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc
 key = abcde12345abcde12345
 register = PL
+
+[Plugins]
+invoice_numbering = 
 
 [Paths]
 database = /tmp/.autoinvoice/dbase.db

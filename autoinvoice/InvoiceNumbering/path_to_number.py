@@ -1,4 +1,5 @@
-#! /bin/sh
+# -*- coding: utf-8 -*-
+
 #################################################################################
 #    Autoinvoice is a program to automate invoicing process                     #
 #    Copyright (C) 2019  Łukasz Buśko                                           #
@@ -16,21 +17,22 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
+from os import getcwd, sep
+from .IInvoiceNumber import IInvoiceNumber
 
-function test {
-	$1
-#	if [ $? -ne 0 ]; then
-#		exit $?
-#	fi
-}
+class PathToNumber(IInvoiceNumber):
+    def get_invoice_number(self) -> str:
+        """
+        Get current and top directory and format form it string
+        current/top
+        """
+        path = getcwd().split(sep)[-2:]
+        if path[1].isnumeric():
+            number = path[1]
+        else:
+            for i, s in enumerate(path[1]):
+                if not s.isnumeric():
+                    break
+            number = path[1][:i]
 
-rm -r $(find . -name "__pycache__" -type d)
-find . -name "*.pyc" -type f -exec rm {} \;
-
-test "python3 -m unittest tests/test_ICompanyRegister.py"
-test "python3 -m unittest tests/test_Poland.py"
-test "python3 -m unittest tests/test_CompanyRegisterPluginManager.py"
-test "python3 -m unittest tests/test_database.py"
-test "python3 -m unittest tests/test_driver.py"
-test "python3 -m unittest tests/test_cmdline.py"
-test "python3 -m unittest tests/test_path_to_number.py"
+        return '{}/{}'.format(number, path[0])

@@ -85,6 +85,7 @@ class TestDriver(unittest.TestCase):
         options.taxpayerid = '5222680297'
         options.template = 'tests/data/template1.tex'
         setattr(options, 'register', 'PL')
+        setattr(options, 'invoice_numbering', '')
         taxpayerid = '5261040828'
 
         driver = Driver(options)

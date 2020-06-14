@@ -33,6 +33,9 @@ def Configuration(options):
                         'key' : '',
                         'register' : 'PL',
                         },
+            'Plugins' : {
+                            'invoice_numbering' : '',
+                        },
             'Paths' : {
                         'database' : '~/.autoinvoice/dbase.db',
                         'template' : '/usr/share/polishinvoice/templates/simple.tex'
@@ -124,6 +127,8 @@ def main():
     setattr(options, 'url', config.get('Common', 'url'))
     setattr(options, 'key', config.get('Common', 'key'))
     setattr(options, 'register', config.get('Common', 'register'))
+    # Plugins
+    setattr(options, 'invoice_numbering', config.get('Plugins', 'invoice_numbering'))
 
     if options.verbose:
         print(options)
