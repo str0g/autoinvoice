@@ -51,7 +51,7 @@ class TestOptions(unittest.TestCase):
 
     def test_options(self):
         default = {'generate': None, 'update': None, 'configuration': '~/.autoinvoice/config',
-                'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'verbouse': False}#,
+                'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'verbose': False}#,
 #                'url' : '' , 'key' : '', 'register' : 'PL'}
         options = cmdline.Options()
         self.assertEqual(options, default)
@@ -94,7 +94,7 @@ name =
 '''.split('\n')
 
         values = Dummy().values
-        values.verbouse = True
+        values.verbose = True
         with RedirectedStdout() as stream:
             cfg = cmdline.Configuration(values)
             out = str(stream).split('\n')
@@ -113,7 +113,7 @@ class TestInputValidation(unittest.TestCase):
 
         self.default_opt_parser_output = {'generate': None, 'update': None, 'configuration': 'this-file-does-not-exist',
                 'database': self.database, 'template': '/usr/share/polishinvoice/templates/simple.tex', 'output' : None,
-                'taxpayerid': '', 'verbouse': True, 'name' : '', 'url' : '' , 'key' : '', 'register' : 'PL'}
+                'taxpayerid': '', 'verbose': True, 'name' : '', 'url' : '' , 'key' : '', 'register' : 'PL'}
 
         self.default_config_output = '''\
 [Common]
@@ -175,7 +175,7 @@ name = Łukasz Buśko\
 
         custom_opt_parser_output = {'generate': None, 'update': None, 'configuration': test_config,
                 'database': self.database, 'template': test_template, 'output' : None,
-                'taxpayerid': '5222680297', 'verbouse': True, 'name' : 'Łukasz Buśko',
+                'taxpayerid': '5222680297', 'verbose': True, 'name' : 'Łukasz Buśko',
                 'url' : '' , 'key' : '', 'register' : 'PL'}
 
         with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:

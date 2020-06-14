@@ -27,7 +27,7 @@ def Dummy():
     setattr(parser.values, 'taxpayerid', 0)
     #for configuration testing
     setattr(parser.values, 'configuration', '')
-    setattr(parser.values, 'verbouse', False)
+    setattr(parser.values, 'verbose', False)
     setattr(parser.values, 'register', '')
 
     return parser

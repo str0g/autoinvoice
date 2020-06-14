@@ -29,13 +29,13 @@ from autoinvoice.CompanyRegister.CompanyRegisterPluginManager import getCompanyR
 class TestgetCompanyRegister(unittest.TestCase):
     def test_getCompanyRegister(self):
         inp = Dummy()
-        inp.values.verbouse = True
+        inp.values.verbose = True
         inp.values.register = 'PL'
         self.assertIs(APIREGON, type(getCompanyRegister(inp.values)))
 
     def test_getCompanyRegister_neg(self):
         inp = Dummy()
-        inp.values.verbouse = True
+        inp.values.verbose = True
         inp.values.register = 'CZ'
         with self.assertRaises(KeyError):
             getCompanyRegister(inp.values)

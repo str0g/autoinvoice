@@ -51,7 +51,7 @@ def Configuration(options):
     if options.taxpayerid:
         config.set('Refere', 'taxpayerid', options.taxpayerid)
 
-    if options.verbouse:
+    if options.verbose:
         import sys
         config.write(sys.stdout)
 
@@ -89,7 +89,7 @@ def Options():
             help="Output file for filled template")
     parser.add_option("--taxpayerid", action="callback", type="string", nargs=2, callback=tax_ref,
             help="<taxpayerid> \"<name surename>\"")
-    parser.add_option("-v", "--verbouse", action="store_true", default=False, dest="verbouse",
+    parser.add_option("-v", "--verbose", action="store_true", default=False, dest="verbose",
             help="Verbouse")
 
     (options, args) = parser.parse_args()
@@ -125,7 +125,7 @@ def main():
     setattr(options, 'key', config.get('Common', 'key'))
     setattr(options, 'register', config.get('Common', 'register'))
 
-    if options.verbouse:
+    if options.verbose:
         print(options)
 
     driver = Driver(options)

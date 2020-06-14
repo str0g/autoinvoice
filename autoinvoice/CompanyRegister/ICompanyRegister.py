@@ -20,7 +20,7 @@
 
 class ICompanyRegister:
     def __init__(self, options):
-        self.verbouse = options.verbouse
+        self.verbose = options.verbose
 
     def getRecords(self, TaxPayerId, url, key) -> []:
         '''Return vector with dictionaries related to single tax payer id'''
@@ -58,7 +58,7 @@ class ICompanyRegister:
         '''
         Takes as input database record
         '''
-        if self.verbouse:
+        if self.verbose:
             print(record)
 
         return {
