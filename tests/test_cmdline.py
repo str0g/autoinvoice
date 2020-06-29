@@ -28,6 +28,7 @@ import filecmp
 
 from autoinvoice import cmdline
 from .dummy import Dummy
+from .configuration_creator import ConfigurationCreator
 
 test_config = 'tests/data/config'
 test_config_apiregon = 'tests/data/config_apiregon'
@@ -57,7 +58,7 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(options, default)
 
 class TestConfiguration(unittest.TestCase):
-    def test_defaut(self):
+    def test_default(self):
         import sys
         from io import StringIO
 
@@ -77,25 +78,7 @@ class TestConfiguration(unittest.TestCase):
             def __str__(self):
                 return self._string_io.getvalue()
 
-        exp = '''\
-[Common]
-url = 
-key = 
-register = PL
-
-[Plugins]
-invoice_numbering = 
-
-[Paths]
-database = ~/.autoinvoice/dbase.db
-template = /usr/share/polishinvoice/templates/simple.tex
-
-[Refere]
-taxpayerid = 
-name = 
-
-'''.split('\n')
-
+        exp = (ConfigurationCreator().get_configuration() + '\n' + '\n').split('\n')
         values = Dummy().values
         values.verbose = True
         with RedirectedStdout() as stream:
@@ -116,25 +99,9 @@ class TestInputValidation(unittest.TestCase):
 
         self.default_opt_parser_output = {'generate': None, 'update': None, 'configuration': 'this-file-does-not-exist',
                 'database': self.database, 'template': '/usr/share/polishinvoice/templates/simple.tex', 'output' : None,
-                'taxpayerid': '', 'verbose': True, 'name' : '', 'url' : '' , 'key' : '', 'register' : 'PL', 'invoice_numbering' : ''}
+                'taxpayerid': '', 'verbose': True, 'name' : '', 'url' : '' , 'key' : '', 'register' : 'PL', 'invoice_numbering': ''}
 
-        self.default_config_output = '''\
-[Common]
-url = 
-key = 
-register = PL
-
-[Plugins]
-invoice_numbering = 
-
-[Paths]
-database = ~/.autoinvoice/dbase.db
-template = /usr/share/polishinvoice/templates/simple.tex
-
-[Refere]
-taxpayerid = 
-name = \
-'''
+        self.default_config_output = ConfigurationCreator().get_configuration()
 
         self.expected_output ='''\
 {}
@@ -143,23 +110,10 @@ name = \
 
 CompletedProcess(args={}, returncode=0)'''
 
-        self.custom_config_output = '''\
-[Common]
-url = 
-key = 
-register = PL
-
-[Plugins]
-invoice_numbering = 
-
-[Paths]
-database = /tmp/.autoinvoice/dbase.db
-template = {}
-
-[Refere]
-taxpayerid = 5222680297
-name = Łukasz Buśko\
-'''.format(test_template)
+        self.custom_config_output = ConfigurationCreator(
+            {'template': test_template, 'name': 'Łukasz Buśko',
+             'taxpayerid': '5222680297', 'database': '/tmp/.autoinvoice/dbase.db'}
+        ).get_configuration()
 
     def tearDown(self):
         remove(self.database)
@@ -183,9 +137,9 @@ name = Łukasz Buśko\
         custom_cmdline_input =['python3', '-m', 'autoinvoice', '-v', '-c', test_config, '-d', self.database]
 
         custom_opt_parser_output = {'generate': None, 'update': None, 'configuration': test_config,
-                'database': self.database, 'template': test_template, 'output' : None,
-                'taxpayerid': '5222680297', 'verbose': True, 'name' : 'Łukasz Buśko',
-                'url' : '' , 'key' : '', 'register' : 'PL', 'invoice_numbering' : ''}
+                'database': self.database, 'template': test_template, 'output': None,
+                'taxpayerid': '5222680297', 'verbose': True, 'name': 'Łukasz Buśko',
+                'url': '' , 'key': '', 'register': 'PL', 'invoice_numbering': ''}
 
         with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:
             out = proc.stdout.read().decode('utf-8').split('\n')
@@ -214,23 +168,11 @@ name = Łukasz Buśko\
         self.default_opt_parser_output['name'] = 'Łukasz Buśko'
         self.default_opt_parser_output['invoice_numbering'] = ''
         self.maxDiff = None
-        custom_config_output = '''\
-[Common]
-url = https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc
-key = abcde12345abcde12345
-register = PL
-
-[Plugins]
-invoice_numbering = 
-
-[Paths]
-database = /tmp/.autoinvoice/dbase.db
-template = {}
-
-[Refere]
-taxpayerid = 5222680297
-name = Łukasz Buśko\
-'''.format(test_template)
+        custom_config_output = ConfigurationCreator(
+            {'template': test_template, 'name': 'Łukasz Buśko', 'key': 'abcde12345abcde12345',
+             'taxpayerid': '5222680297', 'database': '/tmp/.autoinvoice/dbase.db',
+             'url': 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'}
+        ).get_configuration()
 
         with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:
             out = proc.stdout.read().decode('utf-8').split('\n')
