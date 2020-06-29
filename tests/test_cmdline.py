@@ -19,9 +19,7 @@
 #################################################################################
 
 import unittest
-import subprocess
 from shutil import copyfile
-from os.path import expanduser, isfile
 from os import remove
 from pathlib import Path
 import filecmp
@@ -29,6 +27,7 @@ import filecmp
 from autoinvoice import cmdline
 from .dummy import Dummy
 from .configuration_creator import ConfigurationCreator
+from .cmdline_creator import CmdlineCreator
 
 test_config = 'tests/data/config'
 test_config_apiregon = 'tests/data/config_apiregon'
@@ -52,8 +51,7 @@ class TestOptions(unittest.TestCase):
 
     def test_options(self):
         default = {'generate': None, 'update': None, 'configuration': '~/.autoinvoice/config',
-                'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'verbose': False}#,
-#                'url' : '' , 'key' : '', 'register' : 'PL'}
+                'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'verbose': False}
         options = cmdline.Options()
         self.assertEqual(options, default)
 
@@ -95,11 +93,6 @@ class TestInputValidation(unittest.TestCase):
         Path(self.database_path).mkdir(exist_ok=True)
         self.database = '{}/dbase.db'.format(self.database_path)
         copyfile('tests/data/dbase.db', self.database)
-        self.default_cmdline_input = ['python3', '-m', 'autoinvoice', '-v', '-c', 'this-file-does-not-exist', '-d', self.database]
-
-        self.default_opt_parser_output = {'generate': None, 'update': None, 'configuration': 'this-file-does-not-exist',
-                'database': self.database, 'template': '/usr/share/polishinvoice/templates/simple.tex', 'output' : None,
-                'taxpayerid': '', 'verbose': True, 'name' : '', 'url' : '' , 'key' : '', 'register' : 'PL', 'invoice_numbering': ''}
 
         self.default_config_output = ConfigurationCreator().get_configuration()
 
@@ -120,13 +113,19 @@ CompletedProcess(args={}, returncode=0)'''
         Path(self.database_path).rmdir()
 
     def test_default_values(self):
-        with subprocess.Popen(self.default_cmdline_input, stdout=subprocess.PIPE) as proc:
-            out = proc.stdout.read().decode('utf-8').split('\n')
+        cc = CmdlineCreator(
+            {'configuration': 'this-file-does-not-exist',
+              'template': '/usr/share/polishinvoice/templates/simple.tex',
+              },
+            {'-d': self.database}
+        )
 
-        self.assertEqual(proc.returncode, 0)
+        code, out = cc.run()
+
+        self.assertEqual(code, 0)
 
         exp = self.expected_output.format(self.default_config_output, 
-        self.default_opt_parser_output, self.default_cmdline_input).split('\n')
+        cc.command_output(), cc.command_line_input()).split('\n')
 
         for i in range(len(out)):
             if out[i] != exp[i]:
@@ -134,19 +133,21 @@ CompletedProcess(args={}, returncode=0)'''
             self.assertEqual(out[i], exp[i])
 
     def test_override_default_values(self):
-        custom_cmdline_input =['python3', '-m', 'autoinvoice', '-v', '-c', test_config, '-d', self.database]
+        cc = CmdlineCreator(
+            {'configuration': test_config,
+              'template': test_template,
+             'taxpayerid': '5222680297',
+             'name': 'Łukasz Buśko'
+              },
+            {'-d': self.database}
+        )
 
-        custom_opt_parser_output = {'generate': None, 'update': None, 'configuration': test_config,
-                'database': self.database, 'template': test_template, 'output': None,
-                'taxpayerid': '5222680297', 'verbose': True, 'name': 'Łukasz Buśko',
-                'url': '' , 'key': '', 'register': 'PL', 'invoice_numbering': ''}
+        code, out = cc.run()
 
-        with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:
-            out = proc.stdout.read().decode('utf-8').split('\n')
-        self.assertEqual(proc.returncode, 0)
+        self.assertEqual(code, 0)
 
-        exp = self.expected_output.format(self.custom_config_output, custom_opt_parser_output,
-        custom_cmdline_input).split('\n')
+        exp = self.expected_output.format(self.custom_config_output, cc.command_output(),
+        cc.command_line_input()).split('\n')
 
         for i in range(len(out)):
             if out[i] != exp[i]:
@@ -156,31 +157,26 @@ CompletedProcess(args={}, returncode=0)'''
     def test_update(self):
         tab = [5261044039, 5261044039]
 
-        custom_cmdline_input = ['python3', '-m', 'autoinvoice', '-v', '-c', test_config_apiregon,
-                '-u', str(tab[0]), '--update', str(tab[1])]
+        input = {
+            'template': test_template, 'name': 'Łukasz Buśko',
+            'key': 'abcde12345abcde12345', 'taxpayerid': '5222680297',
+            'url': 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'
+        }
+        input_config = {'database': '/tmp/.autoinvoice/dbase.db'}
+        input_config.update(input)
 
-        self.default_opt_parser_output['configuration'] = test_config_apiregon
-        self.default_opt_parser_output['template'] = test_template
-        self.default_opt_parser_output['update'] = tab
-        self.default_opt_parser_output['url'] = 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'
-        self.default_opt_parser_output['key'] = 'abcde12345abcde12345'
-        self.default_opt_parser_output['taxpayerid'] = '5222680297'
-        self.default_opt_parser_output['name'] = 'Łukasz Buśko'
-        self.default_opt_parser_output['invoice_numbering'] = ''
-        self.maxDiff = None
-        custom_config_output = ConfigurationCreator(
-            {'template': test_template, 'name': 'Łukasz Buśko', 'key': 'abcde12345abcde12345',
-             'taxpayerid': '5222680297', 'database': '/tmp/.autoinvoice/dbase.db',
-             'url': 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'}
-        ).get_configuration()
+        custom_config_output = ConfigurationCreator(input_config).get_configuration()
 
-        with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:
-            out = proc.stdout.read().decode('utf-8').split('\n')
+        input_cmdline = {'configuration': test_config_apiregon, 'update': tab}
+        input_cmdline.update(input)
+        cc = CmdlineCreator(input_cmdline, {'-u': tab})
 
-        self.assertEqual(proc.returncode, 0)
+        code, out = cc.run()
 
-        exp = self.expected_output.format(custom_config_output, self.default_opt_parser_output,
-        custom_cmdline_input).split('\n')
+        self.assertEqual(code, 0)
+
+        exp = self.expected_output.format(custom_config_output, cc.command_output(),
+        cc.command_line_input()).split('\n')
 
         for i in range(len(out)):
             if out[i] != exp[i]:
@@ -189,15 +185,14 @@ CompletedProcess(args={}, returncode=0)'''
 
     def test_new(self):
         tab = ['5261040828', '5261044039']
-        custom_cmdline_input = ['python3', '-m', 'autoinvoice', '-v', '-c', test_config,
-                '-g', tab[0], '--generate', tab[1]]
 
-        self.default_opt_parser_output['configuration'] = test_config
-        self.default_opt_parser_output['generate'] = tab
-        self.default_opt_parser_output['taxpayerid'] = '5222680297'
-        self.default_opt_parser_output['name'] = 'Łukasz Buśko'
-        self.default_opt_parser_output['template'] = test_template
-        self.default_opt_parser_output['generate'] = tab
+        cc = CmdlineCreator(
+            {'configuration': test_config, 'generate': tab,
+              'taxpayerid': '5222680297', 'name': 'Łukasz Buśko', 'template': test_template,
+              }
+        )
+
+        code, out = cc.run()
 
         LaTeX_U ='''\
 \\documentclass[polish]{article}
@@ -278,10 +273,7 @@ CompletedProcess(args={}, returncode=0)'''
 
 \\end{document}\
 '''
-        with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:
-            out = proc.stdout.read().decode('utf-8').split('\n')
-
-        self.assertEqual(proc.returncode, 0)
+        self.assertEqual(code, 0)
 
         _taxpayer = {'taxpayerid': '5222680297', 'regon': '382921340', 'companyname': 'GUNS4HIRE ŁUKASZ BUŚKO', 'state': 'MAZOWIECKIE', 'address': 'ul. Lajosa Kossutha 12 lok. 48', 'postcode': '01-315', 'city': 'Warszawa', 'refere': 'Łukasz Buśko'}
 
@@ -298,8 +290,8 @@ CompletedProcess(args={}, returncode=0)'''
 {}
 
 
-CompletedProcess(args={}, returncode=0)'''.format(self.custom_config_output, self.default_opt_parser_output,
-        _taxpayer, LaTeX_U, _taxpayer, LaTeX_S, self.default_cmdline_input).split('\n')
+CompletedProcess(args={}, returncode=0)'''.format(self.custom_config_output, cc.command_output(),
+        _taxpayer, LaTeX_U, _taxpayer, LaTeX_S, cc.command_line_input()).split('\n')
 
         for i in range(len(out)):
             if out[i] != exp[i]:
@@ -310,19 +302,14 @@ CompletedProcess(args={}, returncode=0)'''.format(self.custom_config_output, sel
         tab = ['5261040828']
         output = '/tmp/text.tex'
 
-        custom_cmdline_input = ['python3', '-m', 'autoinvoice', '-v', '-c', test_config, '-g', tab[0], '-o', output]
+        cc = CmdlineCreator(
+            { 'configuration': test_config, 'generate': tab, 'output': output,
+              'taxpayerid': '5222680297', 'name': 'Łukasz Buśko', 'template': test_template,
+              }
+        )
 
-        self.default_opt_parser_output['configuration'] = test_config
-        self.default_opt_parser_output['generate'] = tab
-        self.default_opt_parser_output['output'] = output
-        self.default_opt_parser_output['taxpayerid'] = '5222680297'
-        self.default_opt_parser_output['name'] = 'Łukasz Buśko'
-        self.default_opt_parser_output['template'] = test_template
-
-        with subprocess.Popen(custom_cmdline_input, stdout=subprocess.PIPE) as proc:
-            out = proc.stdout.read().decode('utf-8').split('\n')
-
-        self.assertEqual(proc.returncode, 0)
+        code, out = cc.run()
+        self.assertEqual(code, 0)
 
         #_taxpayer = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
         _taxpayer = {'taxpayerid': '5222680297', 'regon': '382921340', 'companyname': 'GUNS4HIRE ŁUKASZ BUŚKO', 'state': 'MAZOWIECKIE', 'address': 'ul. Lajosa Kossutha 12 lok. 48', 'postcode': '01-315', 'city': 'Warszawa', 'refere': 'Łukasz Buśko'}
@@ -334,8 +321,8 @@ CompletedProcess(args={}, returncode=0)'''.format(self.custom_config_output, sel
 {}
 
 CompletedProcess(args={}, returncode=0)
-'''.format(self.custom_config_output, self.default_opt_parser_output, _taxpayer,_taxpayer,
-        self.default_cmdline_input).split('\n')
+'''.format(self.custom_config_output, cc.command_output(), _taxpayer, _taxpayer,
+           cc.command_line_input()).split('\n')
 
         for i in range(len(out)):
             if out[i] != exp[i]:

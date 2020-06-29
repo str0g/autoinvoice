@@ -1,14 +1,14 @@
 import unittest
 import os
-import subprocess
 from shutil import copyfile, rmtree
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from autoinvoice.InvoiceNumbering.path_to_number import PathToNumber
 from .dummy import Dummy
+from .cmdline_creator import CmdlineCreator
 
-template='tests/data/template_path_to_number.tex'
-config='tests/data/config_path_to_number'
+template = 'tests/data/template_path_to_number.tex'
+config = 'tests/data/config_path_to_number'
 
 class TestPathToNumber(unittest.TestCase):
     def test_path(self):
@@ -45,11 +45,14 @@ class TestPathToNumber(unittest.TestCase):
         test_template = '{}/{}'.format(self.database_path, 'template.tex')
         copyfile(config, config_path_to_number)
         copyfile(template, test_template)
-        cmdline_input = ['python3', '-m', 'autoinvoice', '-c', config_path_to_number, '-d', self.database, '-g', '5261040828']
 
-        opt_parser_output = {'generate': ['5261040828'], 'update': None, 'configuration': config_path_to_number,
-                'database': self.database, 'template': test_template, 'output' : None,
-                'taxpayerid': '5222680297', 'verbouse': True, 'name' : 'Łukasz Buśko', 'url' : '' , 'key' : '', 'register' : 'PL', 'invoice_numbering' : 'path_to_number'}
+        cc = CmdlineCreator(
+            {'configuration': config_path_to_number, 'generate': ['5261040828'], 'verbose': False},
+            {'-d': self.database}
+        )
+
+        code, out = cc.run()
+        self.assertEqual(code, 0)
 
         self.expected_output ='''\
 {}
@@ -95,10 +98,6 @@ class TestPathToNumber(unittest.TestCase):
 
 \\end{document}\
 '''
-
-        with subprocess.Popen(cmdline_input, stdout=subprocess.PIPE) as proc:
-            out = proc.stdout.read().decode('utf-8').split('\n')
-        self.assertEqual(proc.returncode, 0)
 
         exp = self.expected_output.format(LaTeX_U).split('\n')
         for i in range(len(out)):
