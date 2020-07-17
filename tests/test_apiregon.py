@@ -20,10 +20,11 @@
 
 import unittest
 
-from autoinvoice.CompanyRegister.Poland import APIREGON
+from autoinvoice.CompanyRegister.plugins.apiregon import APIREGON
 from .dummy import Dummy
 
-class TestPoland(unittest.TestCase):
+
+class TestAPIREGON(unittest.TestCase):
     def test_getRecords(self):
         paths = ['tests/data/sample1.xml', 'tests/data/sample2.xml']
 
@@ -35,13 +36,13 @@ class TestPoland(unittest.TestCase):
         for path in paths:
             out = krs.getRecords(path, None, None)
             if path == paths[0]:
-                self.assertEqual(sample1_out,out)
+                self.assertEqual(sample1_out, out)
             elif path == paths[1]:
-                self.assertEqual(sample2_out,out)
+                self.assertEqual(sample2_out, out)
             else:
                 raise ValueError('Fix test')
 
-    def test_getRecords(self):
+    def test_getRecords_neg(self):
         with self.assertRaises(ValueError):
             krs = APIREGON(Dummy().values)
             out = krs.getRecords(None, None, None)
@@ -55,4 +56,4 @@ class TestPoland(unittest.TestCase):
         krs = APIREGON(Dummy().values)
         out = krs.getRecords(exp['taxpayerid'], url, key)[0]
 
-        self.assertDictEqual(exp,out)
+        self.assertDictEqual(exp, out)

@@ -31,7 +31,7 @@ def Configuration(options):
             'Common' : {
                         'url' : '',
                         'key' : '',
-                        'register' : 'PL',
+                        'register' : 'apiregon',
                         },
             'Plugins' : {
                             'invoice_numbering' : '',
@@ -60,11 +60,11 @@ def Configuration(options):
 
     dbpath = config.get('Paths', 'database')
     if dbpath:
-        if dbpath.find('~')!=-1:
+        if dbpath.find('~') != -1:
            config.set('Paths', 'database', expanduser(dbpath))
     template = config.get('Paths', 'template')
     if template:
-        if template.find('~')!=-1:
+        if template.find('~') != -1:
             config.set('Paths', 'template', expanduser(template))
 
     return config

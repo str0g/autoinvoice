@@ -84,7 +84,7 @@ class TestDriver(unittest.TestCase):
         options.database = self.database
         options.taxpayerid = '5222680297'
         options.template = 'tests/data/template1.tex'
-        setattr(options, 'register', 'PL')
+        setattr(options, 'register', 'apiregon')
         setattr(options, 'invoice_numbering', '')
         taxpayerid = '5261040828'
 

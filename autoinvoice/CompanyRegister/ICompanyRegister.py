@@ -23,7 +23,9 @@ class ICompanyRegister:
         self.verbose = options.verbose
 
     def getRecords(self, TaxPayerId, url, key) -> []:
-        '''Return vector with dictionaries related to single tax payer id'''
+        """
+        Return vector with dictionaries related to single tax payer id
+        """
         raise NotImplementedError("Pure virtual method")
 
     def buildRecord(self, taxpayerid, regon, companyname, state, address, postcode, city, refere) -> dict:
@@ -55,9 +57,9 @@ class ICompanyRegister:
                 }
 
     def recordToRefere(self, record) -> dict:
-        '''
+        """
         Takes as input database record
-        '''
+        """
         if self.verbose:
             print(record)
 

@@ -18,22 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
+from ..common import get_plugins
+from ..InvoiceNumbering import plugins
+
+
 def getInvoiceNumber(options) -> dict:
-    '''
-    Plugin name
-    '''
-
-    if not options.invoice_numbering:
-        return None
-
-    import sys
-    sys.path.append('InvoiceNumbering')
-    from .path_to_number import PathToNumber
-    
-    dic = {
-            'path_to_number' : PathToNumber
-            }
-
-    return {
-            'invoice_number' : dic[options.invoice_numbering](options).get_invoice_number()
-            }
+    plugins_list = get_plugins(plugins)
+    key = 'autoinvoice.InvoiceNumbering.plugins.{}'.format(options.invoice_numbering)
+    try:
+        return {
+            'invoice_number': plugins_list[key].get()(options)()
+        }
+    except KeyError as e:
+        return {}

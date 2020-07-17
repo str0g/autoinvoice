@@ -26,10 +26,13 @@ from autoinvoice.CompanyRegister.database import DataBase
 
 data_in = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
 
+
 class TestDataBase(unittest.TestCase):
     path_db = 'dbase_test.db'
+
     def setUp(self):
         pass
+
     def tearDown(self):
         try:
             os.remove(self.path_db)

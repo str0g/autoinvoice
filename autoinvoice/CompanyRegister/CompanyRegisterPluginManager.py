@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-def getCompanyRegister(options):
-    '''
-    Country name short and capital letters PL, CZ, LV and so one
-    '''
-    import sys
-    sys.path.append('CompanyRegister')
-    from .Poland import APIREGON
-    
-    dic = {'PL' : APIREGON}
+from ..common import get_plugins
+from ..CompanyRegister import plugins
 
-    return dic[options.register](options)
+
+def getCompanyRegister(options):
+    """
+    Register plugin name
+    """
+    plugins_list = get_plugins(plugins)
+    key = 'autoinvoice.CompanyRegister.plugins.{}'.format(options.register)
+    return plugins_list[key].get()(options)

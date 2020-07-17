@@ -6,7 +6,7 @@ class ConfigurationCreator:
             'invoice_numbering': '',
             'taxpayerid': '',
             'name': '',
-            'register': 'PL',
+            'register': 'apiregon',
             'database': '~/.autoinvoice/dbase.db',
             'template': '/usr/share/polishinvoice/templates/simple.tex'
         }

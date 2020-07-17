@@ -24,6 +24,7 @@ from .CompanyRegister.CompanyRegisterPluginManager import getCompanyRegister
 from .CompanyRegister.database import DataBase
 from .InvoiceNumbering import getInvoiceNumber
 
+
 class Driver:
     def __init__(self, options):
         self.options = options
@@ -50,7 +51,7 @@ class Driver:
                 raise ValueError("Record not found")
 
             cnt = len(record)
-            if(cnt>1):
+            if cnt > 1:
                 '''
                 Its possible to retrieve more then one record for some companies.
                 Currently always first record will be picked
@@ -83,9 +84,8 @@ class Driver:
         if self.invoice_number:
             client.update(self.invoice_number)
 
-
         with open(self.options.template) as fd:
             template = fd.read()
             out = template.format(**client)
-                    
+
         return out

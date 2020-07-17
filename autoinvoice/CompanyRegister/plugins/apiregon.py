@@ -21,7 +21,8 @@
 from litex.regon import REGONAPI, REGONAPIError
 from requests.exceptions import MissingSchema
 
-from .ICompanyRegister import ICompanyRegister
+from ..ICompanyRegister import ICompanyRegister
+
 
 class APIREGON(ICompanyRegister):
     def getRecords(self, TaxPayerId, url, key):
@@ -31,10 +32,10 @@ class APIREGON(ICompanyRegister):
         return self.getDataByAPIREGON(TaxPayerId, url, key)
 
     def getDataByAPIREGON(self, TaxPayerId, url, key) -> [dict]:
-        '''
+        """
         Test driven implementation
-        '''
-        if(TaxPayerId.isnumeric()):
+        """
+        if TaxPayerId.isnumeric():
             out = []
             api = None
             session = None
@@ -44,9 +45,9 @@ class APIREGON(ICompanyRegister):
                 records = api.search(TaxPayerId, detailed=True)
                 for record in records:
                     if record.Typ == 'F':
-                        address,name = self._fizyczne(record.detailed)
+                        address, name = self._fizyczne(record.detailed)
                     elif record.Typ == 'P':
-                        address,name = self._prawne(record.detailed)
+                        address, name = self._prawne(record.detailed)
                     else:
                         raise NotImplementedError("Unknown type: {}".format(record.Typ))
 
@@ -92,28 +93,28 @@ class APIREGON(ICompanyRegister):
 
     def _prawne(self, data):
         return self._address(data.praw_adSiedzUlica_Nazwa, data.praw_adSiedzNumerNieruchomosci,
-                    data.praw_adSiedzNumerLokalu),''
+                             data.praw_adSiedzNumerLokalu), ''
 
     def _fizyczne(self, data):
         name = '{} {}'.format(str(data.fiz_imie1).capitalize(), str(data.fiz_nazwisko).capitalize())
 
         return self._address(data.fiz_adSiedzUlica_Nazwa, data.fiz_adSiedzNumerNieruchomosci,
-                    data.fiz_adSiedzNumerLokalu),name
+                             data.fiz_adSiedzNumerLokalu), name
 
     def xmlToRecord(self, data) -> [dict]:
-        '''
+        """
         Required <data> element as input then will retrieve whats needed
         Returns database ready record
-        '''
+        """
         import xml.etree.ElementTree as ET
 
         records = []
         root = ET.fromstring(data)
 
         for data in root:
-            address=''
+            address = ''
             street = data.findtext('Ulica')
-            streetnumber=data.findtext('NrNieruchomosci')
+            streetnumber = data.findtext('NrNieruchomosci')
             premisesnumber = data.findtext('NrLokalu')
         
             if street:
@@ -127,12 +128,15 @@ class APIREGON(ICompanyRegister):
         
             records.append(
                 self.buildRecord(data.findtext('Nip'),
-                data.findtext('Regon'), 
-                data.findtext('Nazwa'),
-                data.findtext('Wojewodztwo'),
-                address,
-                data.findtext('KodPocztowy'),
-                data.findtext('Miejscowosc'),
-                '@TODO')) # imie1 nazwisko
-
+                                 data.findtext('Regon'),
+                                 data.findtext('Nazwa'),
+                                 data.findtext('Wojewodztwo'),
+                                 address,
+                                 data.findtext('KodPocztowy'),
+                                 data.findtext('Miejscowosc'),
+                                 '@TODO'))  # imie1 nazwisko
         return records
+
+
+def get():
+    return APIREGON

@@ -22,6 +22,6 @@ class IInvoiceNumber:
     def __init__(self, options):
         self.verbose = options.verbose
 
-    def get_invoice_number(self) -> str:
+    def __call__(self) -> str:
         raise NotImplementedError("Pure virtual method")
 

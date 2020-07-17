@@ -17,22 +17,18 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
-from os import getcwd, sep
-from .IInvoiceNumber import IInvoiceNumber
 
-class PathToNumber(IInvoiceNumber):
-    def get_invoice_number(self) -> str:
-        """
-        Get current and top directory and format form it string
-        current/top
-        """
-        path = getcwd().split(sep)[-2:]
-        if path[1].isnumeric():
-            number = path[1]
-        else:
-            for i, s in enumerate(path[1]):
-                if not s.isnumeric():
-                    break
-            number = path[1][:i]
+import importlib
+import pkgutil
 
-        return '{}/{}'.format(number, path[0])
+
+def _iter_namespace(ns_pkg):
+    return pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + ".")
+
+
+def get_plugins(plugins):
+    return {
+        name: importlib.import_module(name)
+        for finder, name, ispkg
+        in _iter_namespace(plugins)
+    }

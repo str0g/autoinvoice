@@ -16,7 +16,7 @@ class CmdlineCreator:
             'name': '',
             'url': '',
             'key': '',
-            'register': 'PL',
+            'register': 'apiregon',
             'invoice_numbering': '',
         }
         if cmd:

@@ -20,6 +20,7 @@
 
 import sqlite3
 
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
@@ -27,13 +28,15 @@ def dict_factory(cursor, row):
     d['taxpayerid'] = str(row[0])
     return d
 
+
 class DataBase:
     def __init__(self, path):
         self.con = sqlite3.connect(path)
         self.cur = self.con.cursor()
         self.cur.row_factory = dict_factory
-        if(not self.isTables()):
+        if not self.isTables():
             self.createTables()
+
     def __deinit__(self):
         self.con.close()
 
@@ -66,9 +69,9 @@ class DataBase:
         self.con.commit()
 
     def update(self, record: dict):
-        '''
+        """
         Don't need to be entire record required, field is taxpayerid
-        '''
+        """
 #        print(record)
         _record = self.getRecord(record["taxpayerid"])
         _record.update(record)

@@ -3,7 +3,7 @@ import os
 from shutil import copyfile, rmtree
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from autoinvoice.InvoiceNumbering.path_to_number import PathToNumber
+from autoinvoice.InvoiceNumbering.plugins.path_to_number import PathToNumber
 from .dummy import Dummy
 from .cmdline_creator import CmdlineCreator
 
@@ -13,7 +13,7 @@ config = 'tests/data/config_path_to_number'
 class TestPathToNumber(unittest.TestCase):
     def test_path(self):
         ptn = PathToNumber(Dummy().values)
-        self.assertEqual('/repos', ptn.get_invoice_number())
+        self.assertEqual('/repos', ptn())
 
     def test_real_path(self):
         with TemporaryDirectory() as tmpdir:
@@ -22,7 +22,7 @@ class TestPathToNumber(unittest.TestCase):
             os.makedirs(path)
             os.chdir(path)
             ptn = PathToNumber(Dummy().values)
-            self.assertEqual('01/202006', ptn.get_invoice_number())
+            self.assertEqual('01/202006', ptn())
 
     def test_real_path_desc(self):
         with TemporaryDirectory() as tmpdir:
@@ -31,7 +31,7 @@ class TestPathToNumber(unittest.TestCase):
             os.makedirs(path)
             os.chdir(path)
             ptn = PathToNumber(Dummy().values)
-            self.assertEqual('02/202006', ptn.get_invoice_number())
+            self.assertEqual('02/202006', ptn())
 
     def setUp(self):
         self.database_path = '/tmp/.autoinvoice'

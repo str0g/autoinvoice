@@ -21,14 +21,17 @@
 
 from setuptools import setup, find_packages
 from os.path import join, dirname
+from os import linesep
+
 
 def get_description():
     def readfile(fname):
         return open(join(dirname(__file__), fname)).read()
     description = ''
     for fname in ('README.md', 'CONTRIBUTORS', 'LICENSE'):
-        description += readfile(fname) + '\n\n'
+        description += readfile(fname) + linesep + linesep
     return description
+
 
 setup(
         name='AutoInvoice',
@@ -38,7 +41,7 @@ setup(
         description='Invoice template generator, with plugins for downloading business clients information basin on tax payer id',
         license='GPL',
         keywords='invoice invoices latex generator',
-        url = 'github.com/str0g/AutoInvoice',
+        url='github.com/str0g/AutoInvoice',
         packages=find_packages(
             exclude=['tests']),
         long_description=get_description(),
@@ -49,7 +52,8 @@ setup(
             'License :: GPL License',
         ],
         install_requires=[
-            'litex.regon'
+            'litex.regon',
+            'requests'
         ],
         include_package_data=True,
         test_suite='tests',
