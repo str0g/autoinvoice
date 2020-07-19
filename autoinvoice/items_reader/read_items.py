@@ -1,4 +1,5 @@
-#! /bin/sh
+# -*- coding: utf-8 -*-
+
 #################################################################################
 #    Autoinvoice is a program to automate invoicing process                     #
 #    Copyright (C) 2019  Łukasz Buśko                                           #
@@ -16,22 +17,21 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
+from os import path
+from ..common import get_plugins
+from ..items_reader import plugins
 
-function test {
-	$1
-#	if [ $? -ne 0 ]; then
-#		exit $?
-#	fi
-}
 
-rm -r $(find . -name "__pycache__" -type d)
-find . -name "*.pyc" -type f -exec rm {} \;
+def read_items(options) -> dict:
+    """
+    Plugin should be build with naming concept read_[extension] and placed inside plugins folder
+    read_json is reference file
+    """
+    plugins_list = get_plugins(plugins)
+    if not options.items:
+        return {}
 
-test "python3 -m unittest tests/test_ICompanyRegister.py"
-test "python3 -m unittest tests/test_apiregon.py"
-test "python3 -m unittest tests/test_CompanyRegisterPluginManager.py"
-test "python3 -m unittest tests/test_database.py"
-test "python3 -m unittest tests/test_driver.py"
-test "python3 -m unittest tests/test_cmdline.py"
-test "python3 -m unittest tests/test_path_to_number.py"
-test "python3 -m unittest tests/test_read_json.py"
+    ext = path.splitext(options.items)[1][1:]
+    key = 'autoinvoice.items_reader.plugins.read_{}'.format(ext)
+
+    return plugins_list[key].get()(options.items)()

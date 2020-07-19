@@ -51,7 +51,7 @@ class TestOptions(unittest.TestCase):
 
     def test_options(self):
         default = {'generate': None, 'update': None, 'configuration': '~/.autoinvoice/config',
-                'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'verbose': False}
+                'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'items': None, 'verbose': False}
         options = cmdline.Options()
         self.assertEqual(options, default)
 

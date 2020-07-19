@@ -86,6 +86,7 @@ class TestDriver(unittest.TestCase):
         options.template = 'tests/data/template1.tex'
         setattr(options, 'register', 'apiregon')
         setattr(options, 'invoice_numbering', '')
+        setattr(options, 'items', None)
         taxpayerid = '5261040828'
 
         driver = Driver(options)

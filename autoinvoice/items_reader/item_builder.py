@@ -1,4 +1,5 @@
-#! /bin/sh
+# -*- coding: utf-8 -*-
+
 #################################################################################
 #    Autoinvoice is a program to automate invoicing process                     #
 #    Copyright (C) 2019  Łukasz Buśko                                           #
@@ -17,21 +18,35 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-function test {
-	$1
-#	if [ $? -ne 0 ]; then
-#		exit $?
-#	fi
-}
+from decimal import Decimal
+from os import linesep
 
-rm -r $(find . -name "__pycache__" -type d)
-find . -name "*.pyc" -type f -exec rm {} \;
 
-test "python3 -m unittest tests/test_ICompanyRegister.py"
-test "python3 -m unittest tests/test_apiregon.py"
-test "python3 -m unittest tests/test_CompanyRegisterPluginManager.py"
-test "python3 -m unittest tests/test_database.py"
-test "python3 -m unittest tests/test_driver.py"
-test "python3 -m unittest tests/test_cmdline.py"
-test "python3 -m unittest tests/test_path_to_number.py"
-test "python3 -m unittest tests/test_read_json.py"
+class ItemBuilder:
+    def __init__(self, input: dict):
+        self.item_pattern = input['pattern']
+        self.subtotal = Decimal(0)
+        self.total = Decimal(0)
+        self.items = ''
+        for item in input['items']:
+            tax = item['tax']
+            amount = Decimal(item['amount'])
+            amount_with_tax = amount * Decimal('1.{}'.format(tax))
+
+            self.subtotal += amount
+            self.total += amount_with_tax
+            self.items += self.item_pattern.format(**{
+                'description': item['description'],
+                'amount': amount.quantize(Decimal('1.00')),
+                'tax': tax,
+                'total': amount_with_tax.quantize(Decimal('1.00'))
+            }) + linesep
+        self.tax = self.total - self.subtotal
+
+    def __call__(self) -> dict:
+        return {
+            'items': self.items,
+            'subtotal': str(self.subtotal.quantize(Decimal('1.00'))),
+            'tax': str(self.tax.quantize(Decimal('1.00'))),
+            'total': str(self.total.quantize(Decimal('1.00')))
+        }

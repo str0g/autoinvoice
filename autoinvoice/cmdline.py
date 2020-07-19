@@ -92,6 +92,7 @@ def Options():
             help="Output file for filled template")
     parser.add_option("--taxpayerid", action="callback", type="string", nargs=2, callback=tax_ref,
             help="<taxpayerid> \"<name surename>\"")
+    parser.add_option("-i", "--items", type="string", help="File with items")
     parser.add_option("-v", "--verbose", action="store_true", default=False, dest="verbose",
             help="Verbouse")
 

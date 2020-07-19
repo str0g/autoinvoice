@@ -23,6 +23,7 @@ from pathlib import Path
 from .CompanyRegister.CompanyRegisterPluginManager import getCompanyRegister
 from .CompanyRegister.database import DataBase
 from .InvoiceNumbering import getInvoiceNumber
+from .items_reader.read_items import read_items
 
 
 class Driver:
@@ -30,6 +31,7 @@ class Driver:
         self.options = options
         self.crm = getCompanyRegister(options)
         self.invoice_number = getInvoiceNumber(options)
+        self.invoice_items = read_items(options)
 
         self.database_init()
 
@@ -81,8 +83,12 @@ class Driver:
         ref = self.crm.recordToRefere(self.getRecord(self.options.taxpayerid))
         client = self.getRecord(taxpayerid)
         client.update(ref)
+
         if self.invoice_number:
             client.update(self.invoice_number)
+
+        if self.invoice_items:
+            client.update(self.invoice_items)
 
         with open(self.options.template) as fd:
             template = fd.read()

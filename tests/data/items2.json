@@ -1,0 +1,20 @@
+{
+  "pattern": "\\additem {{{description}}} {{{amount} PLN}} {{{tax}}} {{{total} PLN}}",
+  "items": [
+    {
+      "description": "Invoice for programing A",
+      "amount": 19200.00,
+      "tax": 23
+    },
+    {
+      "description": "Invoice for programing B",
+      "amount": 4500.00,
+      "tax": 23
+    },
+    {
+      "description": "Invoice for firearms training",
+      "amount": 304.00,
+      "tax": 23
+    }
+  ]
+}

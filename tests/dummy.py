@@ -29,5 +29,6 @@ def Dummy():
     setattr(parser.values, 'configuration', '')
     setattr(parser.values, 'verbose', False)
     setattr(parser.values, 'register', '')
+    setattr(parser.values, 'items', None)
 
     return parser

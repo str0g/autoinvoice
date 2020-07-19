@@ -12,6 +12,7 @@ class CmdlineCreator:
             'template': '',
             'output': None,
             'taxpayerid': '',
+            'items': None,
             'verbose': True,
             'name': '',
             'url': '',
@@ -47,6 +48,10 @@ class CmdlineCreator:
         if self.cmd['output']:
             self.cmdline.append('-o')
             self.cmdline.append(self.cmd['output'])
+
+        if self.cmd['items']:
+            self.cmdline.append('-i')
+            self.cmdline.append(self.cmd['items'])
 
         with Popen(self.cmdline, stdout=PIPE) as proc:
             out = proc.stdout.read().decode('utf-8').split('\n')

@@ -1,0 +1,16 @@
+[Common]
+url=
+key=
+register=apiregon
+
+[Plugins]
+invoice_numbering = path_to_number
+
+[Paths]
+database=/tmp/.autoinvoice/dbase.db
+#leave empty to use one provided in small buisness set, package(polishinvoice https://github.com/str0g/polishinvoice)
+template=/tmp/.autoinvoice/template.tex
+
+[Refere]
+taxpayerid=5222680297
+name=Łukasz Buśko

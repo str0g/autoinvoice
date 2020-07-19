@@ -1,0 +1,37 @@
+\documentclass[polish]{{article}}
+
+\usepackage{{polski}}
+\usepackage[utf8]{{inputenc}}
+\usepackage{{fullpage}}
+\usepackage[polish]{{polishinvoice}}
+\usepackage{{bookmark}}
+
+\pagestyle{{empty}}
+\setinvoicetitle{{Faktura}}
+
+\setname{{{ref_companyname}}}
+\setourref{{{ref_refere}}}
+\setaddress{{{ref_address} \\ {ref_postcode} {ref_city}}}
+\setcompanyid{{{ref_taxpayerid}}}
+\setphonenumber{{+48662152026}}
+\setemail{{guns4hire@pm.me}}
+\setaccountnumber{{04 1140 2004 0000 3102 7864 4964}}
+\setdeadline{{10}}
+\setinvoicenumber{{{invoice_number}}}
+
+\setreceivername{{{companyname}}}
+\setreceiveraddress{{{address} \\ {postcode} {city}}}
+\setreceivercompanyid{{{taxpayerid}}}
+
+{items}
+\setsubtotal{{{subtotal} PLN}}
+\setvat{{{tax} PLN}}
+\settotal{{{total} PLN}}
+\setinvoicedate{{19 lipiec 2020}}
+\overridedateofissue{{19.07.2020}}
+
+\begin{{document}}
+
+\makeinvoice
+
+\end{{document}}
