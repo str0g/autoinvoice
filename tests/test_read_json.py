@@ -26,11 +26,11 @@ class TestReadJson(unittest.TestCase):
     def test_read_json(self):
         paths = ['tests/data/items1.json', 'tests/data/items2.json']
         dicts = [{
-            'items': '\\additem {item1} {100.00 PLN} {23} {123.00 PLN}\n'
+            'items': '\\additem {item1} {109.50 PLN} {23} {134.69 PLN}\n'
                      '\\additem {next item} {57.00 PLN} {0} {57.00 PLN}\n',
-            'subtotal': '157.00',
-            'tax': '23.00',
-            'total': '180.00'
+            'subtotal': '166.50',
+            'tax': '25.19',
+            'total': '191.69'
                 },
                 {
             'items': '\\additem {Invoice for programing A} {19200.00 PLN} {23} {23616.00 PLN}\n'

@@ -18,12 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-from decimal import Decimal
+from decimal import Decimal, getcontext, ROUND_HALF_UP
 from os import linesep
 
 
 class ItemBuilder:
     def __init__(self, input: dict):
+        getcontext().rounding = ROUND_HALF_UP
         self.item_pattern = input['pattern']
         self.subtotal = Decimal(0)
         self.total = Decimal(0)

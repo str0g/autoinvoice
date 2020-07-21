@@ -1,1 +1,1 @@
-{"pattern": "\\additem {{{description}}} {{{amount} PLN}} {{{tax}}} {{{total} PLN}}", "items": [{"description": "item1", "amount": 100.00, "tax": 23}, {"description": "next item", "amount": 57.00, "tax": 0}]}
+{"pattern": "\\additem {{{description}}} {{{amount} PLN}} {{{tax}}} {{{total} PLN}}", "items": [{"description": "item1", "amount": 109.50, "tax": 23}, {"description": "next item", "amount": 57.00, "tax": 0}]}
