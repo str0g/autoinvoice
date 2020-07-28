@@ -71,7 +71,8 @@ Plugins
 
 ### Company register
 
-- apiregon for Polish government companies database.
+- apiregon2 for Polish government companies database.
+- apiregon for Polish government companies database(legacy will be dropped soon).
 
 ### Automatic Invoice Numbering
 

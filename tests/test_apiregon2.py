@@ -1,4 +1,5 @@
-#! /bin/sh
+# -*- coding: utf-8 -*-
+
 #################################################################################
 #    Autoinvoice is a program to automate invoicing process                     #
 #    Copyright (C) 2019  Łukasz Buśko                                           #
@@ -17,22 +18,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-function test {
-	$1
-#	if [ $? -ne 0 ]; then
-#		exit $?
-#	fi
-}
+import unittest
 
-rm -r $(find . -name "__pycache__" -type d)
-find . -name "*.pyc" -type f -exec rm {} \;
+from autoinvoice.CompanyRegister.plugins.apiregon2 import APIREGON2
+from .dummy import Dummy
 
-test "python3 -m unittest tests/test_ICompanyRegister.py"
-test "python3 -m unittest tests/test_apiregon.py"
-test "python3 -m unittest tests/test_apiregon2.py"
-test "python3 -m unittest tests/test_CompanyRegisterPluginManager.py"
-test "python3 -m unittest tests/test_database.py"
-test "python3 -m unittest tests/test_driver.py"
-test "python3 -m unittest tests/test_cmdline.py"
-test "python3 -m unittest tests/test_path_to_number.py"
-test "python3 -m unittest tests/test_read_json.py"
+
+class TestAPIREGON2(unittest.TestCase):
+    def test_getRecordswithAPI(self):
+        exp = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': ''}
+
+        url = 'not_production'
+        key = 'abcde12345abcde12345'
+
+        krs = APIREGON2(Dummy().values)
+        out = krs.getRecords(exp['taxpayerid'], url, key)[0]
+
+        self.assertDictEqual(exp, out)

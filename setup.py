@@ -52,6 +52,7 @@ setup(
             'License :: GPL License',
         ],
         install_requires=[
+            'RegonAPI',
             'litex.regon',
             'requests'
         ],
