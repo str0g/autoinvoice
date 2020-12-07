@@ -28,6 +28,8 @@ Resources for tests should be used to build proper application configuration.
 │   ├── dbase_table.sql\
 │   ├── items1.json\
 │   ├── items2.json\
+│   ├── items3.json\
+│   ├── items4.json\
 │   ├── sample1.xml\
 │   ├── sample2.xml\
 │   ├── template1.tex\
