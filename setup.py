@@ -54,7 +54,10 @@ setup(
         install_requires=[
             'RegonAPI',
             'litex.regon',
-            'requests'
+            'requests',
+            'qrcode',
+            'pillow',
+            'opencv-python'
         ],
         include_package_data=True,
         test_suite='tests',

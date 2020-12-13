@@ -90,6 +90,8 @@ class Driver:
         if self.invoice_items:
             client.update(self.invoice_items)
 
+        client.update(get_qrcode(client))
+
         with open(self.options.template) as fd:
             template = fd.read()
             out = template.format(**client)
