@@ -34,7 +34,8 @@ def Configuration(options):
                         'register' : 'apiregon',
                         },
             'Plugins' : {
-                            'invoice_numbering' : '',
+                            'invoice_numbering': '',
+                            'qrcode_generator': '',
                         },
             'Paths' : {
                         'database' : '~/.autoinvoice/dbase.db',

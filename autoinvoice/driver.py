@@ -24,6 +24,7 @@ from .CompanyRegister.CompanyRegisterPluginManager import getCompanyRegister
 from .CompanyRegister.database import DataBase
 from .InvoiceNumbering import getInvoiceNumber
 from .items_reader.read_items import read_items
+from .qrcode_generator.qrmanager import qrmanager
 
 
 class Driver:
@@ -32,6 +33,7 @@ class Driver:
         self.crm = getCompanyRegister(options)
         self.invoice_number = getInvoiceNumber(options)
         self.invoice_items = read_items(options)
+        self.qrcode_gen = qrmanager(options)
 
         self.database_init()
 
@@ -90,7 +92,8 @@ class Driver:
         if self.invoice_items:
             client.update(self.invoice_items)
 
-        client.update(get_qrcode(client))
+        if self.qrcode_gen:
+            client.update(self.qrcode_gen(client))
 
         with open(self.options.template) as fd:
             template = fd.read()

@@ -25,13 +25,16 @@ import base64
 import cv2
 import numpy
 
-from autoinvoice.qrcode import get_qrcode
+from .dummy import Dummy
+from autoinvoice.qrcode_generator.plugins.zbp2d_std import QRCode_zbp2d
+from autoinvoice.qrcode_generator.qrmanager import qrmanager
+
 
 class TestGetQRCode_simple(unittest.TestCase):
-    def test_input(self):
+    def test_qrcode(self):
         amount = Decimal(666.71).quantize(Decimal('1.00'))
         data = {
-            'ref_accountnumber': '1234567890',
+            'ref_accountnumber': '93114020040000320300621961',
             'invoice_number': '01/12/2020',
             'ref_taxpayerid': '5222680297',
             'ref_companyname': 'GUNS4HIRE',
@@ -40,8 +43,8 @@ class TestGetQRCode_simple(unittest.TestCase):
         }
         cmp_data = data.copy()
         cmp_data['amount'] = cmp_data['amount'].replace(',','')
-        cmp_str = '5222680297|PL|1234567890|66671|GUNS4HIRE|01/12/2020|||'
-        qr = get_qrcode(data)
+        cmp_str = '5222680297|PL|93114020040000320300621961|66671|GUNS4HIRE|01/12/2020|||'
+        qr = QRCode_zbp2d(data)()
 
         self.assertIsInstance(qr, dict)
         self.assertEqual(len(qr), 1)
@@ -49,10 +52,15 @@ class TestGetQRCode_simple(unittest.TestCase):
         self.assertIsInstance([value for value in qr.values()][0], bytes)
         #
         np = numpy.asarray(bytearray(base64.b64decode(qr['qrcode'])), dtype=numpy.uint8)
-        #img = cv2.imdecode(np, cv2.IMREAD_GRAYSCALE)
-        #img = cv2.imdecode(np, cv2.IMREAD_COLOR)
         img = cv2.imdecode(np, cv2.IMREAD_UNCHANGED)
         #
         detector = cv2.QRCodeDetector()
         data, bbox, straight_qrcode = detector.detectAndDecode(img)
         self.assertEqual(data, cmp_str)
+
+    def test_plugin(self):
+        dummy = Dummy()
+        setattr(dummy.values, 'qrcode_generator', 'zbp2d_std')
+        plugin = qrmanager(dummy.values)
+        self.assertIsNotNone(plugin)
+        self.assertEqual(plugin.__name__, QRCode_zbp2d.__name__)
