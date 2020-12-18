@@ -131,6 +131,7 @@ def main():
     setattr(options, 'register', config.get('Common', 'register'))
     # Plugins
     setattr(options, 'invoice_numbering', config.get('Plugins', 'invoice_numbering'))
+    setattr(options, 'qrcode_generator', config.get('Plugins', 'qrcode_generator'))
 
     if options.verbose:
         print(options)

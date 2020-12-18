@@ -26,7 +26,6 @@ def qrmanager(options):
     plugins_list = get_plugins(plugins)
     key = 'autoinvoice.qrcode_generator.plugins.{}'.format(options.qrcode_generator)
     try:
-        print(plugins_list)
         return plugins_list[key].get()
     except KeyError as e:
         return None

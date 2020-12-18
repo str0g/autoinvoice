@@ -4,6 +4,7 @@ class ConfigurationCreator:
             'url': '',
             'key': '',
             'invoice_numbering': '',
+            'qrcode_generator': '',
             'taxpayerid': '',
             'name': '',
             'register': 'apiregon',
@@ -20,6 +21,7 @@ register = {register}
 
 [Plugins]
 invoice_numbering = {invoice_numbering}
+qrcode_generator = {qrcode_generator}
 
 [Paths]
 database = {database}

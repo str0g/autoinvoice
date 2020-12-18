@@ -19,6 +19,7 @@ class CmdlineCreator:
             'key': '',
             'register': 'apiregon',
             'invoice_numbering': '',
+            'qrcode_generator': ''
         }
         if cmd:
             self.cmd.update(cmd)
