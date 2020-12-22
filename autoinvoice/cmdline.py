@@ -104,6 +104,13 @@ def Options():
 
     return options
 
+
+def settattr_from_configuration_group(options, config, group: str):
+    if group in config:
+        for opt in config[group]:
+            setattr(options, opt, config[group][opt])
+
+
 def main():
     options = Options()
 
@@ -130,8 +137,9 @@ def main():
     setattr(options, 'key', config.get('Common', 'key'))
     setattr(options, 'register', config.get('Common', 'register'))
     # Plugins
-    setattr(options, 'invoice_numbering', config.get('Plugins', 'invoice_numbering'))
-    setattr(options, 'qrcode_generator', config.get('Plugins', 'qrcode_generator'))
+    settattr_from_configuration_group(options, config, 'Plugins')
+    # QRCode
+    settattr_from_configuration_group(options, config, 'QRCode')
 
     if options.verbose:
         print(options)

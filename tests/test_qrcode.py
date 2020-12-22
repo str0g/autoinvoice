@@ -19,32 +19,52 @@
 #################################################################################
 
 import unittest
-from decimal import Decimal
 import base64
+import os
+from decimal import Decimal
+from pathlib import Path
+from shutil import copyfile, rmtree
 
 import cv2
 import numpy
 
-from .dummy import Dummy
+from .dummy import Dummy, get_dummy
 from autoinvoice.qrcode_generator.plugins.zbp2d_std import QRCode_zbp2d
 from autoinvoice.qrcode_generator.qrmanager import qrmanager
+from .cmdline_creator import CmdlineCreator
+
+template = 'tests/data/template_qrcode.tex'
+config = 'tests/data/config_qrcode_zbp2d'
+path_json = 'tests/data/items2.json'
 
 
 class TestGetQRCode_simple(unittest.TestCase):
-    def test_qrcode(self):
+    def setUp(self):
+        self.dummy = Dummy()
+        self.dummy.values.taxpayerid = 5222680297
+        setattr(self.dummy.values, 'QRCode', get_dummy())
+        setattr(self.dummy.values.QRCode, 'accountnumber', '93114020040000320300621961')
+        setattr(self.dummy.values.QRCode, 'country_iso', 'PL')
+
         amount = Decimal(666.71).quantize(Decimal('1.00'))
-        data = {
-            'ref_accountnumber': '93114020040000320300621961',
+        self.default_data = {
             'invoice_number': '01/12/2020',
-            'ref_taxpayerid': '5222680297',
-            'ref_companyname': 'GUNS4HIRE',
-            'amount': str(amount),
-            'country_iso': 'PL'
+            'companyname': 'GUNS4HIRE',
+            'total': str(amount)
         }
-        cmp_data = data.copy()
-        cmp_data['amount'] = cmp_data['amount'].replace(',','')
+
+        self.database_path = '/tmp/.autoinvoice'
+        self.database = '{}/dbase.db'.format(self.database_path)
+
+    def tearDown(self):
+        rmtree(self.database_path, ignore_errors=True)
+
+    def test_qrcode_encode_decode(self):
+        cmp_data = self.default_data.copy()
+        cmp_data['total'] = cmp_data['total'].replace(',','')
         cmp_str = '5222680297|PL|93114020040000320300621961|66671|GUNS4HIRE|01/12/2020|||'
-        qr = QRCode_zbp2d(data)()
+
+        qr = QRCode_zbp2d(self.dummy.values, cmp_data)()
 
         self.assertIsInstance(qr, dict)
         self.assertEqual(len(qr), 1)
@@ -59,8 +79,24 @@ class TestGetQRCode_simple(unittest.TestCase):
         self.assertEqual(data, cmp_str)
 
     def test_plugin(self):
-        dummy = Dummy()
-        setattr(dummy.values, 'qrcode_generator', 'zbp2d_std')
-        plugin = qrmanager(dummy.values)
+        setattr(self.dummy.values, 'qrcode_generator', 'zbp2d_std')
+        plugin = qrmanager(self.dummy.values)
         self.assertIsNotNone(plugin)
         self.assertEqual(plugin.__name__, QRCode_zbp2d.__name__)
+
+    def test_template(self):
+        Path(self.database_path).mkdir(exist_ok=True)
+        os.makedirs('{}/202012/01_tmp_dir'.format(self.database_path))
+        copyfile('tests/data/dbase.db', self.database)
+        path_config = '{}/{}'.format(self.database_path, 'config')
+        test_template = '{}/{}'.format(self.database_path, 'template.tex')
+        copyfile(config, path_config)
+        copyfile(template, test_template)
+
+        cc = CmdlineCreator(
+            {'configuration': path_config, 'generate': ['5261040828'], 'verbose': False, 'items': path_json},
+            {'-d': self.database},
+        )
+
+        code, out = cc.run()
+        self.assertEqual(code, 0)

@@ -18,12 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-def Dummy():
+
+def get_dummy():
     class dummy:
         def __init__(self):
             pass
-    parser = dummy()
-    setattr(parser, 'values', dummy())
+
+    return dummy()
+
+
+def Dummy():
+    parser = get_dummy()
+    setattr(parser, 'values', get_dummy())
     setattr(parser.values, 'taxpayerid', 0)
     #for configuration testing
     setattr(parser.values, 'configuration', '')
