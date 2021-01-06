@@ -43,8 +43,10 @@ def Configuration(options):
                         },
             'Refere' : {
                         'taxpayerid' : '',
-                        'name' : ''
-                        }
+                        'name' : '',
+                        'account_number' : '',
+                        },
+            'QRCode': {}
             })
 
     config.read([options.configuration], encoding='utf-8')
@@ -132,6 +134,7 @@ def main():
     if not options.taxpayerid:
         options.taxpayerid = config.get('Refere', 'taxpayerid')
         setattr(options, 'name', config.get('Refere', 'name'))
+    #setattr(options, 'account_number', config.get('Refere', 'account_number'))
 
     setattr(options, 'url', config.get('Common', 'url'))
     setattr(options, 'key', config.get('Common', 'key'))

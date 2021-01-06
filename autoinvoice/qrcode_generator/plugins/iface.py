@@ -14,11 +14,12 @@ class IQRCode:
         #qr.save('test_qr.png')
         qr.save(io, format='png')
         io.seek(0)
-        b64 = base64.b64encode(io.getvalue())
+        b64 = base64.b64encode(io.getvalue()).decode('utf-8')
 
         return {'qrcode': b64}
 
 
-def get():
+def get() -> IQRCode:
     raise NotImplemented
-    return IQRCode
+    # Suppose to return class not allocation
+    # return IQRCode

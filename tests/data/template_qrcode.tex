@@ -1,3 +1,5 @@
+% build with pdflatex --shell-escape
+
 \documentclass[polish]{{article}}
 
 \usepackage{{polski}}
@@ -5,6 +7,11 @@
 \usepackage{{fullpage}}
 \usepackage[polish]{{polishinvoice}}
 \usepackage{{bookmark}}
+\usepackage{{graphicx}}
+
+% must be set in order to embedded image work
+\graphicspath{{.}}
+%
 
 \pagestyle{{empty}}
 \setinvoicetitle{{Faktura}}
@@ -14,8 +21,8 @@
 \setaddress{{{ref_address} \\ {ref_postcode} {ref_city}}}
 \setcompanyid{{{ref_taxpayerid}}}
 \setphonenumber{{+48662152026}}
-\setemail{{guns4hire@pm.me}}
-\setaccountnumber{{{account_number}}}}
+\setemail{{lukasz.busko@guns4hire.cc}}
+\setaccountnumber{{{account_number}}}
 \setdeadline{{10}}
 \setinvoicenumber{{{invoice_number}}}
 
@@ -32,9 +39,9 @@
 
 \setwithqrcodes
 \setqrcodebankpayment{{qrcode.png}}
-\begin{filecontents*}{{qrcode.64}}
-{qrcode_zbp2d}
-\end{filecontents*}
+\begin{{filecontents*}}{{qrcode.64}}
+{qrcode}
+\end{{filecontents*}}
 
 \begin{{document}}
 \immediate\write18{{base64 -d qrcode.64 > qrcode.png}}

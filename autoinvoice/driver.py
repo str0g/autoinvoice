@@ -85,6 +85,7 @@ class Driver:
         ref = self.crm.recordToRefere(self.getRecord(self.options.taxpayerid))
         client = self.getRecord(taxpayerid)
         client.update(ref)
+        client['account_number'] = self.options.account_number
 
         if self.invoice_number:
             client.update(self.invoice_number)
@@ -93,7 +94,7 @@ class Driver:
             client.update(self.invoice_items)
 
         if self.qrcode_gen:
-            client.update(self.qrcode_gen(client))
+            client.update(self.qrcode_gen(self.options, client)())
 
         with open(self.options.template) as fd:
             template = fd.read()
