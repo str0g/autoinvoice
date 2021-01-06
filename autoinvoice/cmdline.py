@@ -34,7 +34,8 @@ def Configuration(options):
                         'register' : 'apiregon',
                         },
             'Plugins' : {
-                            'invoice_numbering' : '',
+                            'invoice_numbering': '',
+                            'qrcode_generator': '',
                         },
             'Paths' : {
                         'database' : '~/.autoinvoice/dbase.db',
@@ -42,8 +43,10 @@ def Configuration(options):
                         },
             'Refere' : {
                         'taxpayerid' : '',
-                        'name' : ''
-                        }
+                        'name' : '',
+                        'account_number' : '',
+                        },
+            'QRCode': {}
             })
 
     config.read([options.configuration], encoding='utf-8')
@@ -103,6 +106,13 @@ def Options():
 
     return options
 
+
+def settattr_from_configuration_group(options, config, group: str):
+    if group in config:
+        for opt in config[group]:
+            setattr(options, opt, config[group][opt])
+
+
 def main():
     options = Options()
 
@@ -124,12 +134,15 @@ def main():
     if not options.taxpayerid:
         options.taxpayerid = config.get('Refere', 'taxpayerid')
         setattr(options, 'name', config.get('Refere', 'name'))
+    #setattr(options, 'account_number', config.get('Refere', 'account_number'))
 
     setattr(options, 'url', config.get('Common', 'url'))
     setattr(options, 'key', config.get('Common', 'key'))
     setattr(options, 'register', config.get('Common', 'register'))
     # Plugins
-    setattr(options, 'invoice_numbering', config.get('Plugins', 'invoice_numbering'))
+    settattr_from_configuration_group(options, config, 'Plugins')
+    # QRCode
+    settattr_from_configuration_group(options, config, 'QRCode')
 
     if options.verbose:
         print(options)

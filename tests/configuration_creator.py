@@ -4,8 +4,10 @@ class ConfigurationCreator:
             'url': '',
             'key': '',
             'invoice_numbering': '',
+            'qrcode_generator': '',
             'taxpayerid': '',
             'name': '',
+            'account_number': '',
             'register': 'apiregon',
             'database': '~/.autoinvoice/dbase.db',
             'template': '/usr/share/polishinvoice/templates/simple.tex'
@@ -20,6 +22,7 @@ register = {register}
 
 [Plugins]
 invoice_numbering = {invoice_numbering}
+qrcode_generator = {qrcode_generator}
 
 [Paths]
 database = {database}
@@ -27,7 +30,10 @@ template = {template}
 
 [Refere]
 taxpayerid = {taxpayerid}
-name = {name}\
+name = {name}
+account_number = {account_number}
+
+[QRCode]\
 '''
 
     def get_configuration(self):

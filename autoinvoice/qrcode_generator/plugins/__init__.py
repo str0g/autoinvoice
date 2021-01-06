@@ -17,24 +17,3 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
-
-
-def get_dummy():
-    class dummy:
-        def __init__(self):
-            pass
-
-    return dummy()
-
-
-def Dummy():
-    parser = get_dummy()
-    setattr(parser, 'values', get_dummy())
-    setattr(parser.values, 'taxpayerid', 0)
-    #for configuration testing
-    setattr(parser.values, 'configuration', '')
-    setattr(parser.values, 'verbose', False)
-    setattr(parser.values, 'register', '')
-    setattr(parser.values, 'items', None)
-
-    return parser

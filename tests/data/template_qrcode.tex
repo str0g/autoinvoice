@@ -1,0 +1,51 @@
+% build with pdflatex --shell-escape
+
+\documentclass[polish]{{article}}
+
+\usepackage{{polski}}
+\usepackage[utf8]{{inputenc}}
+\usepackage{{fullpage}}
+\usepackage[polish]{{polishinvoice}}
+\usepackage{{bookmark}}
+\usepackage{{graphicx}}
+
+% must be set in order to embedded image work
+\graphicspath{{.}}
+%
+
+\pagestyle{{empty}}
+\setinvoicetitle{{Faktura}}
+
+\setname{{{ref_companyname}}}
+\setourref{{{ref_refere}}}
+\setaddress{{{ref_address} \\ {ref_postcode} {ref_city}}}
+\setcompanyid{{{ref_taxpayerid}}}
+\setphonenumber{{+48662152026}}
+\setemail{{lukasz.busko@guns4hire.cc}}
+\setaccountnumber{{{account_number}}}
+\setdeadline{{10}}
+\setinvoicenumber{{{invoice_number}}}
+
+\setreceivername{{{companyname}}}
+\setreceiveraddress{{{address} \\ {postcode} {city}}}
+\setreceivercompanyid{{{taxpayerid}}}
+
+{items}
+\setsubtotal{{{subtotal} PLN}}
+\setvat{{{tax} PLN}}
+\settotal{{{total} PLN}}
+\setinvoicedate{{25 grudzień 2020}}
+\overridedateofissue{{25.12.2020}}
+
+\setwithqrcodes
+\setqrcodebankpayment{{qrcode.png}}
+\begin{{filecontents*}}{{qrcode.64}}
+{qrcode}
+\end{{filecontents*}}
+
+\begin{{document}}
+\immediate\write18{{base64 -d qrcode.64 > qrcode.png}}
+
+\makeinvoice
+
+\end{{document}}

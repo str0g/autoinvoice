@@ -9,3 +9,7 @@ template=
 [Refere]
 taxpayerid=
 name=
+account_number=
+
+[QRCode]
+country_iso=

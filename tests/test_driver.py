@@ -87,6 +87,7 @@ class TestDriver(unittest.TestCase):
         setattr(options, 'register', 'apiregon')
         setattr(options, 'invoice_numbering', '')
         setattr(options, 'items', None)
+        setattr(options, 'qrcode_generator', '')
         taxpayerid = '5261040828'
 
         driver = Driver(options)

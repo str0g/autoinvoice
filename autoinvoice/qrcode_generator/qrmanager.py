@@ -1,4 +1,3 @@
-#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 #################################################################################
@@ -18,48 +17,15 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
-
-from setuptools import setup, find_packages
-from os.path import join, dirname
-from os import linesep
-
-
-def get_description():
-    def readfile(fname):
-        return open(join(dirname(__file__), fname)).read()
-    description = ''
-    for fname in ('README.md', 'CONTRIBUTORS', 'LICENSE'):
-        description += readfile(fname) + linesep + linesep
-    return description
+from os import path
+from ..common import get_plugins
+from ..qrcode_generator import plugins
 
 
-setup(
-        name='AutoInvoice',
-        version='1.1.0',
-        author='Łukasz Buśko',
-        author_email='busko.lukasz@pm.me',
-        description='Invoice template generator, with plugins for downloading business clients information basin on tax payer id',
-        license='GPL',
-        keywords='invoice invoices latex generator',
-        url='github.com/str0g/AutoInvoice',
-        packages=find_packages(
-            exclude=['tests']),
-        long_description=get_description(),
-        classifiers=[
-            'Development Status :: 3 - Alpha',
-            'Programing Language :: Python 3.7',
-            'Topic :: Utilities',
-            'License :: GPL License',
-        ],
-        install_requires=[
-            'RegonAPI',
-            'litex.regon',
-            'requests',
-            'qrcode',
-            'pillow',
-            'opencv-python'
-        ],
-        include_package_data=True,
-        test_suite='tests',
-        python_requires='>=3.6'
-)
+def qrmanager(options):
+    plugins_list = get_plugins(plugins)
+    key = 'autoinvoice.qrcode_generator.plugins.{}'.format(options.qrcode_generator)
+    try:
+        return plugins_list[key].get()
+    except KeyError as e:
+        return None

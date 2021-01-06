@@ -82,9 +82,7 @@ class TestConfiguration(unittest.TestCase):
         with RedirectedStdout() as stream:
             cfg = cmdline.Configuration(values)
             out = str(stream).split('\n')
-            for i in range(len(exp)):
-                self.assertEqual(out[i], exp[i])
-            self.assertEqual(len(exp), len(out))
+            self.assertListEqual(out, exp)
 
 
 class TestInputValidation(unittest.TestCase):
