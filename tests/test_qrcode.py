@@ -28,9 +28,10 @@ from shutil import copyfile, rmtree
 import cv2
 import numpy
 
-from .dummy import Dummy, get_dummy
-from autoinvoice.qrcode_generator.plugins.zbp2d import Zbp2d
-from autoinvoice.qrcode_generator.qrmanager import qrmanager
+from autoinvoice.mod_qrcode.plugins.zbp2d import Zbp2d
+from autoinvoice.mod_qrcode.manager import manager
+from autoinvoice import configs
+from .utils import set_default_config
 from .cmdline_creator import CmdlineCreator
 
 template = 'tests/data/template_qrcode.tex'
@@ -40,10 +41,6 @@ path_json = 'tests/data/items1.json'
 
 class TestGetQRCode_simple(unittest.TestCase):
     def setUp(self):
-        self.dummy = Dummy()
-        self.dummy.values.taxpayerid = 5222680297
-        setattr(self.dummy.values, 'account_number', '93114020040000320300621961')
-        setattr(self.dummy.values, 'country_iso', 'PL')
 
         amount = Decimal(666.71).quantize(Decimal('1.00'))
         self.default_data = {
@@ -54,16 +51,23 @@ class TestGetQRCode_simple(unittest.TestCase):
 
         self.database_path = '/tmp/.autoinvoice'
         self.database = '{}/dbase.db'.format(self.database_path)
+        #
+        set_default_config()
+        configs.config.set('Plugins', 'mod_qrcodes', 'zbp2d')
+        if not 'zbp2d' in configs.config.sections():
+            configs.config.add_section('zbp2d')
+        configs.config.set('zbp2d', 'country_iso', 'PL')
+
 
     def tearDown(self):
         rmtree(self.database_path, ignore_errors=True)
 
     def test_qrcode_encode_decode(self):
         cmp_data = self.default_data.copy()
-        cmp_data['total'] = cmp_data['total'].replace(',','')
+        cmp_data['total'] = cmp_data['total'].replace(',', '')
         cmp_str = '5222680297|PL|93114020040000320300621961|66671|GUNS4HIRE|01/12/2020|||'
 
-        qr = Zbp2d(self.dummy.values, cmp_data)()
+        qr = Zbp2d(cmp_data)()
 
         self.assertIsInstance(qr, dict)
         self.assertEqual(len(qr), 1)
@@ -79,35 +83,31 @@ class TestGetQRCode_simple(unittest.TestCase):
         self.assertEqual(data, cmp_str)
 
     def test_plugin(self):
-        setattr(self.dummy.values, 'qrcode_generator', 'zbp2d')
-        plugin = qrmanager(self.dummy.values)
-        self.assertIsNotNone(plugin)
-        self.assertEqual(plugin.__name__, Zbp2d.__name__)
+        plugin = manager()
+        self.assertListEqual(plugin, [Zbp2d])
 
     def test_input(self):
         cmp_data = self.default_data.copy()
 
-        setattr(self.dummy.values, 'country_iso', '')
-        print(len(self.dummy.values.country_iso))
+        configs.config.set('zbp2d', 'country_iso', '')
         with self.assertRaises(ValueError):
-            qt = Zbp2d(self.dummy.values, cmp_data)()
-        setattr(self.dummy.values, 'country_iso', 'PLNX')
+            qt = Zbp2d(cmp_data)()
+        configs.config.set('zbp2d', 'country_iso', 'PLNX')
         with self.assertRaises(ValueError):
-            qt = Zbp2d(self.dummy.values, cmp_data)()
-        setattr(self.dummy.values, 'country_iso', 'PL')
+            qt = Zbp2d(cmp_data)()
+        configs.config.set('zbp2d', 'country_iso', 'PL')
 
-        setattr(self.dummy.values, 'account_number', '93114020040000320300621961')
-        self.dummy.values.account_number = '012345678901234567891'
+        configs.config.set('Refere', 'account_number', '012345678901234567891')
         with self.assertRaises(ValueError):
-            qt = Zbp2d(self.dummy.values, cmp_data)()
-        self.dummy.values.account_number = '012345678901234567891234567'
+            qt = Zbp2d(cmp_data)()
+        configs.config.set('Refere', 'account_number', '012345678901234567891234567')
         with self.assertRaises(ValueError):
-            qt = Zbp2d(self.dummy.values, cmp_data)()
-        setattr(self.dummy.values, 'account_number', '93114020040000320300621961')
+            qt = Zbp2d(cmp_data)()
+        configs.config.set('Refere', 'account_number', '93114020040000320300621961')
 
-        self.dummy.values.taxpayerid = 52226802970
+        configs.config.set('Refere', 'taxpayerid', '52226802970')
         with self.assertRaises(ValueError):
-            qt = Zbp2d(self.dummy.values, cmp_data)()
+            qt = Zbp2d(cmp_data)()
 
     def test_template(self):
         Path(self.database_path).mkdir(exist_ok=True)

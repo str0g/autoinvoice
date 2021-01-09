@@ -20,37 +20,42 @@
 
 from pathlib import Path
 
-from .CompanyRegister.CompanyRegisterPluginManager import getCompanyRegister
-from .CompanyRegister.database import DataBase
-from .InvoiceNumbering import getInvoiceNumber
-from .items_reader.read_items import read_items
-from .qrcode_generator.qrmanager import qrmanager
+from . import configs
+from .mod_company_register.manager import manager as manager_register
+from .mod_company_register.database import DataBase
+from .mod_invoice_numbering import manager as manager_invoice_numbering
+from .mod_items_reader.manager import manager as manager_items
+from .mod_qrcode.manager import manager as manager_qr
 
 
 class Driver:
-    def __init__(self, options):
-        self.options = options
-        self.crm = getCompanyRegister(options)
-        self.invoice_number = getInvoiceNumber(options)
-        self.invoice_items = read_items(options)
-        self.qrcode_gen = qrmanager(options)
+    def __init__(self):
+        self.database = None
+        self.crm = manager_register()
+        self.invoice_number = manager_invoice_numbering()
+        self.invoice_items = manager_items()
+        self.mod_qrcode = manager_qr()
+        self.url = configs.config.get('Common', 'url')
+        self.key = configs.config.get('Common', 'key')
+        self.ref_taxpayerid = configs.config.get('Refere', 'taxpayerid')
 
         self.database_init()
 
     def database_init(self):
-        if not self.options.database:
+        database = configs.config.get('Paths', 'database', fallback=None)
+        if not database:
             self.db = None
             return
-        path = Path(self.options.database)
-        path.touch(mode=0o640,exist_ok=True)
-        self.db = DataBase(self.options.database)
+        path = Path(database)
+        path.touch(mode=0o640, exist_ok=True)
+        self.database = DataBase(database)
 
     def getRecord(self, taxpayerid):
         record = None
-        if self.db:
-            record = self.db.getRecord(taxpayerid)
+        if self.database:
+            record = self.database.getRecord(taxpayerid)
         if not record:
-            record = self.crm.getRecords(taxpayerid, self.options.url, self.options.key)
+            record = self.crm.getRecords(taxpayerid, self.url, self.key)
             if not record:
                 raise ValueError("Record not found")
 
@@ -70,19 +75,24 @@ class Driver:
         return record
 
     def addRecord(self, record):
-        if self.db:
-            self.db.insert(record)
+        if self.database:
+            self.database.insert(record)
 
     def updateRecord(self, taxpayerid):
-        if self.db:
-            record = self.crm.getRecords(taxpayerid, self.options.url, self.options.key)
+        if self.database:
+            record = self.crm.getRecords(taxpayerid, self.url, self.key)
             if not record:
                 print('Record has not been found for', taxpayerid)
                 return
-            self.db.update(record[0])
+            self.database.update(record[0])
+
+    def configs_to_template_dict(self) -> dict:
+        return {
+            'account_number': configs.config.get('Refere', 'account_number')
+        }
 
     def generateInvoiceTemplete(self, taxpayerid):
-        ref = self.crm.recordToRefere(self.getRecord(self.options.taxpayerid))
+        ref = self.crm.recordToRefere(self.getRecord(self.ref_taxpayerid))
         client = self.getRecord(taxpayerid)
         client.update(ref)
 
@@ -92,11 +102,12 @@ class Driver:
         if self.invoice_items:
             client.update(self.invoice_items)
 
-        if self.qrcode_gen:
-            client['account_number'] = self.options.account_number
-            client.update(self.qrcode_gen(self.options, client)())
+        for plugins in self.mod_qrcode:
+            client.update(plugins(client)())
 
-        with open(self.options.template) as fd:
+        client.update(self.configs_to_template_dict())
+
+        with open(configs.config.get('Paths', 'template')) as fd:
             template = fd.read()
             out = template.format(**client)
 

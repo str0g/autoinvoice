@@ -22,10 +22,10 @@ import unittest
 from pathlib import Path
 from shutil import copyfile
 from os import remove
-import filecmp
 
 from autoinvoice.driver import Driver
-from autoinvoice.cmdline import Options
+from autoinvoice import configs
+from .utils import set_default_config
 
 
 class TestDriver(unittest.TestCase):
@@ -34,6 +34,12 @@ class TestDriver(unittest.TestCase):
         Path(self.database_path).mkdir(exist_ok=True)
         self.database = '{}/dbase.db'.format(self.database_path)
         copyfile('tests/data/dbase.db', self.database)
+
+        configs.reload_configuraiton()
+        set_default_config()
+        configs.config.set('Paths', 'database', self.database)
+        configs.config.set('Paths', 'template', 'tests/data/template1.tex')
+        configs.config.set('Plugins', 'mod_company_register', 'apiregon2')
 
     def tearDown(self):
         remove(self.database)
@@ -57,7 +63,7 @@ class TestDriver(unittest.TestCase):
 \\setaddress{ul. Lajosa Kossutha 12 lok. 48 \\\\ 01-315 Warszawa}
 \\setcompanyid{5222680297}
 \\setphonenumber{+48662152026}
-\\setemail{guns4hire@pm.me}
+\\setemail{lukasz.busko@guns4hire.cc}
 \\setaccountnumber{04 1140 2004 0000 3102 7864 4964}
 \\setdeadline{10}
 \\setinvoicenumber{3/201908}
@@ -80,22 +86,9 @@ class TestDriver(unittest.TestCase):
 \\end{document}
 '''
 
-        options = Options()
-        options.database = self.database
-        options.taxpayerid = '5222680297'
-        options.template = 'tests/data/template1.tex'
-        setattr(options, 'register', 'apiregon')
-        setattr(options, 'invoice_numbering', '')
-        setattr(options, 'items', None)
-        setattr(options, 'qrcode_generator', '')
         taxpayerid = '5261040828'
 
-        driver = Driver(options)
+        driver = Driver()
         out = driver.generateInvoiceTemplete(taxpayerid)
         self.assertEqual(out, exp)
 
-    def test_getRecord(self):
-        # with db test and pre steps...
-        #driver = Driver()
-        # post steps
-        pass

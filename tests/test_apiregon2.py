@@ -20,8 +20,7 @@
 
 import unittest
 
-from autoinvoice.CompanyRegister.plugins.apiregon2 import APIREGON2
-from .dummy import Dummy
+from autoinvoice.mod_company_register.plugins.apiregon2 import APIREGON2
 
 
 class TestAPIREGON2(unittest.TestCase):
@@ -31,7 +30,7 @@ class TestAPIREGON2(unittest.TestCase):
         url = 'not_production'
         key = 'abcde12345abcde12345'
 
-        krs = APIREGON2(Dummy().values)
+        krs = APIREGON2()
         out = krs.getRecords(exp['taxpayerid'], url, key)[0]
 
         self.assertDictEqual(exp, out)

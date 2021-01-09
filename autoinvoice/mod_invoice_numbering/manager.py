@@ -17,21 +17,18 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
-from os import path
+
 from ..common import get_plugins
-from ..items_reader import plugins
+from ..mod_invoice_numbering import plugins
+from .. import configs
 
 
-def read_items(options) -> dict:
-    """
-    Plugin should be build with naming concept read_[extension] and placed inside plugins folder
-    read_json is reference file
-    """
+def manager() -> dict:
     plugins_list = get_plugins(plugins)
-    if not options.items:
+    key = 'autoinvoice.mod_invoice_numbering.plugins.{}'.format(configs.config.get('Plugins', 'mod_invoice_numbering'))
+    try:
+        return {
+            'invoice_number': plugins_list[key].get()()()
+        }
+    except KeyError as e:
         return {}
-
-    ext = path.splitext(options.items)[1][1:]
-    key = 'autoinvoice.items_reader.plugins.read_{}'.format(ext)
-
-    return plugins_list[key].get()(options.items)()

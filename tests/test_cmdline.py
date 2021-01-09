@@ -21,6 +21,7 @@
 import unittest
 from shutil import copyfile
 from os import remove
+from os.path import expanduser
 from pathlib import Path
 import filecmp
 
@@ -28,6 +29,8 @@ from autoinvoice import cmdline
 from .dummy import Dummy
 from .configuration_creator import ConfigurationCreator
 from .cmdline_creator import CmdlineCreator
+from .utils import set_default_config, default_configs_string
+from autoinvoice import configs
 
 test_config = 'tests/data/config'
 test_config_apiregon = 'tests/data/config_apiregon'
@@ -50,12 +53,16 @@ class TestOptions(unittest.TestCase):
             cmdline.tax_ref(None, None, inputx, parser)
 
     def test_options(self):
-        default = {'generate': None, 'update': None, 'configuration': '~/.autoinvoice/config',
+        default = {'generate': None, 'update': None, 'configuration': expanduser('~/.autoinvoice/config'),
                 'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'items': None, 'verbose': False}
-        options = cmdline.Options()
-        self.assertEqual(options, default)
+
+        self.assertDictEqual(configs.options.__dict__, default)
+
 
 class TestConfiguration(unittest.TestCase):
+    def setUp(self):
+        set_default_config()
+
     def test_default(self):
         import sys
         from io import StringIO
@@ -76,11 +83,15 @@ class TestConfiguration(unittest.TestCase):
             def __str__(self):
                 return self._string_io.getvalue()
 
-        exp = (ConfigurationCreator().get_configuration() + '\n' + '\n').split('\n')
-        values = Dummy().values
-        values.verbose = True
+        sys.argv.append('--verbose')
+
+        exp = default_configs_string.split('\n')[:-2]
+        exp.append('verbose = True')
+        exp.append('')
+        exp.append('')
+
         with RedirectedStdout() as stream:
-            cfg = cmdline.Configuration(values)
+            configs.set_configuration()
             out = str(stream).split('\n')
             self.assertListEqual(out, exp)
 
@@ -98,12 +109,12 @@ class TestInputValidation(unittest.TestCase):
 {}
 
 {}
-
-CompletedProcess(args={}, returncode=0)'''
+'''
+#CompletedProcess(args={}, returncode=0)''' @TODO Remove me
 
         self.custom_config_output = ConfigurationCreator(
             {'template': test_template, 'name': 'Łukasz Buśko',
-             'taxpayerid': '5222680297', 'database': '/tmp/.autoinvoice/dbase.db'}
+             'taxpayerid': '5222680297', 'database': '/tmp/.autoinvoice/dbase.db', 'verbose': True}
         ).get_configuration()
 
     def tearDown(self):
@@ -113,44 +124,44 @@ CompletedProcess(args={}, returncode=0)'''
     def test_default_values(self):
         cc = CmdlineCreator(
             {'configuration': 'this-file-does-not-exist',
-              'template': '/usr/share/polishinvoice/templates/simple.tex',
+             'template': test_template,
               },
             {'-d': self.database}
         )
+        custom_config_output = ConfigurationCreator({
+            'database': self.database,
+            'template': test_template,
+            'register': 'apiregon2',
+            'verbose': True,
+        }).get_configuration()
 
         code, out = cc.run()
-
         self.assertEqual(code, 0)
 
-        exp = self.expected_output.format(self.default_config_output, 
+        exp = self.expected_output.format(custom_config_output,
         cc.command_output(), cc.command_line_input()).split('\n')
 
-        for i in range(len(out)):
-            if out[i] != exp[i]:
-                print(out[i], '<=>', exp[i])
-            self.assertEqual(out[i], exp[i])
+        self.maxDiff = None
+        self.assertListEqual(out, exp)
 
     def test_override_default_values(self):
         cc = CmdlineCreator(
-            {'configuration': test_config,
-              'template': test_template,
-             'taxpayerid': '5222680297',
-             'name': 'Łukasz Buśko'
-              },
+            {
+                'configuration': test_config,
+                'template': test_template,
+                'taxpayerid': '5222680297',
+                'name': 'Łukasz Buśko'
+            },
             {'-d': self.database}
         )
 
         code, out = cc.run()
-
         self.assertEqual(code, 0)
 
         exp = self.expected_output.format(self.custom_config_output, cc.command_output(),
         cc.command_line_input()).split('\n')
 
-        for i in range(len(out)):
-            if out[i] != exp[i]:
-                print(out[i], '<=>', exp[i])
-            self.assertEqual(out[i], exp[i])
+        self.assertListEqual(out, exp)
 
     def test_update(self):
         tab = [5261044039, 5261044039]
@@ -160,14 +171,13 @@ CompletedProcess(args={}, returncode=0)'''
             'key': 'abcde12345abcde12345', 'taxpayerid': '5222680297',
             'url': 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'
         }
-        input_config = {'database': '/tmp/.autoinvoice/dbase.db'}
+        input_config = {'database': self.database, 'verbose': True}
         input_config.update(input)
 
         custom_config_output = ConfigurationCreator(input_config).get_configuration()
 
         input_cmdline = {'configuration': test_config_apiregon, 'update': tab}
-        input_cmdline.update(input)
-        cc = CmdlineCreator(input_cmdline, {'-u': tab})
+        cc = CmdlineCreator(input_cmdline, {'-u': tab, '-d': self.database})
 
         code, out = cc.run()
 
@@ -176,10 +186,7 @@ CompletedProcess(args={}, returncode=0)'''
         exp = self.expected_output.format(custom_config_output, cc.command_output(),
         cc.command_line_input()).split('\n')
 
-        for i in range(len(out)):
-            if out[i] != exp[i]:
-                print(out[i], '<=>', exp[i])
-            self.assertEqual(out[i], exp[i])
+        self.assertListEqual(out, exp)
 
     def test_new(self):
         tab = ['5261040828', '5261044039']
@@ -187,7 +194,8 @@ CompletedProcess(args={}, returncode=0)'''
         cc = CmdlineCreator(
             {'configuration': test_config, 'generate': tab,
               'taxpayerid': '5222680297', 'name': 'Łukasz Buśko', 'template': test_template,
-              }
+              },
+            {'-d': self.database}
         )
 
         code, out = cc.run()
@@ -209,7 +217,7 @@ CompletedProcess(args={}, returncode=0)'''
 \\setaddress{ul. Lajosa Kossutha 12 lok. 48 \\\\ 01-315 Warszawa}
 \\setcompanyid{5222680297}
 \\setphonenumber{+48662152026}
-\\setemail{guns4hire@pm.me}
+\\setemail{lukasz.busko@guns4hire.cc}
 \\setaccountnumber{04 1140 2004 0000 3102 7864 4964}
 \\setdeadline{10}
 \\setinvoicenumber{3/201908}
@@ -249,7 +257,7 @@ CompletedProcess(args={}, returncode=0)'''
 \\setaddress{ul. Lajosa Kossutha 12 lok. 48 \\\\ 01-315 Warszawa}
 \\setcompanyid{5222680297}
 \\setphonenumber{+48662152026}
-\\setemail{guns4hire@pm.me}
+\\setemail{lukasz.busko@guns4hire.cc}
 \\setaccountnumber{04 1140 2004 0000 3102 7864 4964}
 \\setdeadline{10}
 \\setinvoicenumber{3/201908}
@@ -287,14 +295,11 @@ CompletedProcess(args={}, returncode=0)'''
 {}
 {}
 
+'''.format(self.custom_config_output, cc.command_output(), _taxpayer,
+        LaTeX_U, _taxpayer, LaTeX_S).split('\n')
 
-CompletedProcess(args={}, returncode=0)'''.format(self.custom_config_output, cc.command_output(),
-        _taxpayer, LaTeX_U, _taxpayer, LaTeX_S, cc.command_line_input()).split('\n')
-
-        for i in range(len(out)):
-            if out[i] != exp[i]:
-                print(out[i], '<=>', exp[i])
-            self.assertEqual(out[i], exp[i])
+        self.maxDiff = None
+        self.assertListEqual(out, exp)
 
     def test_output(self):
         tab = ['5261040828']
@@ -303,7 +308,8 @@ CompletedProcess(args={}, returncode=0)'''.format(self.custom_config_output, cc.
         cc = CmdlineCreator(
             { 'configuration': test_config, 'generate': tab, 'output': output,
               'taxpayerid': '5222680297', 'name': 'Łukasz Buśko', 'template': test_template,
-              }
+              },
+            { '-d': self.database }
         )
 
         code, out = cc.run()
@@ -317,15 +323,10 @@ CompletedProcess(args={}, returncode=0)'''.format(self.custom_config_output, cc.
 
 {}
 {}
+'''.format(self.custom_config_output, cc.command_output(), _taxpayer).split('\n')
+        self.maxDiff = None
+        self.assertListEqual(out, exp)
 
-CompletedProcess(args={}, returncode=0)
-'''.format(self.custom_config_output, cc.command_output(), _taxpayer, _taxpayer,
-           cc.command_line_input()).split('\n')
-
-        for i in range(len(out)):
-            if out[i] != exp[i]:
-                print(out[i], '<=>', exp[i])
-            self.assertEqual(out[i], exp[i])
         filex = '/tmp/text-{}.tex'.format(tab[0])
         self.assertTrue(filecmp.cmp(test_text_tex.format(tab[0]), filex))
         remove(filex)

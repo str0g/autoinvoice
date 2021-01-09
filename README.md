@@ -4,8 +4,7 @@ AutoInvoice
 Dependencies
 --------------------
 
-> py3-lxml for litex.regon
-> litex.regon for soap communication
+Check ```setup.py``` script
 
 Known issues
 --------------------
@@ -17,26 +16,28 @@ Development
 
 ### Resource for tests
 Resources for tests should be used to build proper application configuration.
-
-├── data\
-│   ├── config\
-│   ├── config_apiregon\
-│   ├── config_path_to_number\
-│   ├── config_read_json\
-│   ├── dbase.db\
-│   ├── dbase.sql\
-│   ├── dbase_table.sql\
-│   ├── items1.json\
-│   ├── items2.json\
-│   ├── items3.json\
-│   ├── items4.json\
-│   ├── sample1.xml\
-│   ├── sample2.xml\
-│   ├── template1.tex\
-│   ├── template_path_to_number.tex\
-│   ├── template_read_json.tex\
-│   └── text-5261040828.tex
-
+```
+tests/data/
+├── config
+├── config_apiregon
+├── config_path_to_number
+├── config_qrcode_zbp2d
+├── config_read_json
+├── dbase.db
+├── dbase.sql
+├── dbase_table.sql
+├── items1.json
+├── items2.json
+├── items3.json
+├── items4.json
+├── sample1.xml
+├── sample2.xml
+├── template1.tex
+├── template_path_to_number.tex
+├── template_qrcode.tex
+├── template_read_json.tex
+└── text-5261040828.tex
+```
 
 ### Storing new test data for later dbase usage
 sqlite3 dbase  
@@ -70,6 +71,18 @@ Alias for different profile then default\
 
 Plugins
 -----------
+Plugins folders starts with mod_*\
+Every folder has similar pattern
+```
+├── mod_*
+│   ├── __init__.py
+│   ├── manager.py
+│   ├── plugins
+│   │   ├── iface.py
+│   │   ├── __init__.py
+│   │   ├── some_implementation.py
+```
+Application configuration is being design to provide configuration for plugins if needed. To get more information check tests/data
 
 ### Company register
 
@@ -78,11 +91,16 @@ Plugins
 
 ### Automatic Invoice Numbering
 
-- path_to_number is going to create unique number from catalog structure ```01/202007``` \
+- ```path_to_number``` is going to create unique number from catalog structure ```01/202007``` \
 ```├── 202007```\
 ```│   ├── 01_some_description\```
 
 ### Items reader
 
-- read_json - if autoinvoice parameter ```-i some_file.json``` will be provided plugin is going to generate proper invoice,
+- ```read_json``` - if autoinvoice parameter ```-i some_file.json``` will be provided plugin is going to generate proper invoice,
 count taxes and other amounts (refer to templates in tests/data).
+
+### Qrcodes for payment transactions
+
+- ```zbp2d``` - compatible with [Polish Banks standards](https://zbp.pl/public/repozytorium/dla_bankow/rady_i_komitety/bankowosc_elektroczniczna/rada_bankowosc_elektr/zadania/2013.12.03_-_Rekomendacja_-_Standard_2D.pdf)
+and require additional configuration section.

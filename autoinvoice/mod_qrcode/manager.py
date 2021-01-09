@@ -19,15 +19,20 @@
 #################################################################################
 
 from ..common import get_plugins
-from ..InvoiceNumbering import plugins
+from ..mod_qrcode import plugins
+from .. import configs
 
 
-def getInvoiceNumber(options) -> dict:
+def manager():
     plugins_list = get_plugins(plugins)
-    key = 'autoinvoice.InvoiceNumbering.plugins.{}'.format(options.invoice_numbering)
-    try:
-        return {
-            'invoice_number': plugins_list[key].get()(options)()
-        }
-    except KeyError as e:
-        return {}
+    plugins_list_cfg = [configs.config.get('Plugins', 'mod_qrcodes')]
+    out = []
+    for p in plugins_list_cfg:
+        key = 'autoinvoice.mod_qrcode.plugins.{}'.format(p)
+        try:
+            out.append(plugins_list[key].get())
+        except KeyError as e:
+            pass
+            #print(f'{e}')
+
+    return out

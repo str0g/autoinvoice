@@ -23,6 +23,7 @@ from configparser import ConfigParser
 from os.path import expanduser
 
 from .driver import Driver
+from . import configs
 
 def Configuration(options):
     config = ConfigParser()
@@ -35,7 +36,6 @@ def Configuration(options):
                         },
             'Plugins' : {
                             'invoice_numbering': '',
-                            'qrcode_generator': '',
                         },
             'Paths' : {
                         'database' : '~/.autoinvoice/dbase.db',
@@ -113,8 +113,8 @@ def settattr_from_configuration_group(options, config, group: str):
             setattr(options, opt, config[group][opt])
 
 
-def main():
-    options = Options()
+def main2():
+    configs.options = Options()
 
     if options.configuration.find('~') != -1:
         options.configuration = expanduser(options.configuration)
@@ -144,10 +144,12 @@ def main():
     # QRCode
     settattr_from_configuration_group(options, config, 'QRCode')
 
+def main():
+    options = configs.options
     if options.verbose:
         print(options)
 
-    driver = Driver(options)
+    driver = Driver()
 
     if options.update:
         for taxpaierid in options.update:

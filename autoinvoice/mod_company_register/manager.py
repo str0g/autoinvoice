@@ -17,15 +17,16 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
-from os import path
+
 from ..common import get_plugins
-from ..qrcode_generator import plugins
+from ..mod_company_register import plugins
+from .. import configs
 
 
-def qrmanager(options):
+def manager():
+    """
+    Register plugin name
+    """
     plugins_list = get_plugins(plugins)
-    key = 'autoinvoice.qrcode_generator.plugins.{}'.format(options.qrcode_generator)
-    try:
-        return plugins_list[key].get()
-    except KeyError as e:
-        return None
+    key = 'autoinvoice.mod_company_register.plugins.{}'.format(configs.config.get('Plugins', 'mod_company_register'))
+    return plugins_list[key].get()()

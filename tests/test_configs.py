@@ -2,7 +2,7 @@
 
 #################################################################################
 #    Autoinvoice is a program to automate invoicing process                     #
-#    Copyright (C) 2019  Łukasz Buśko                                           #
+#    Copyright (C) 2021  Łukasz Buśko                                           #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -19,4 +19,22 @@
 #################################################################################
 
 
-name = 'CompanyRegister'
+import unittest
+from io import StringIO
+
+
+from autoinvoice import configs
+from .utils import default_configs_string
+
+
+class TestConfigs(unittest.TestCase):
+    def setUp(self) -> None:
+        configs.reload_configuraiton()
+
+    def test_default_settings_no_options(self):
+        config = configs.config
+
+        output = StringIO()
+        config.write(output)
+
+        self.assertEqual(output.getvalue(), default_configs_string)

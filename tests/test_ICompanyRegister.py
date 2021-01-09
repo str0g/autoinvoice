@@ -19,14 +19,14 @@
 #################################################################################
 
 import unittest
-import sys
 
-from autoinvoice.CompanyRegister.ICompanyRegister import ICompanyRegister
-from .dummy import Dummy
+from autoinvoice.mod_company_register.plugins.iface import ICompanyRegister
+
 
 class TestICompanyRegister(unittest.TestCase):
     def setUp(self):
-        self.reg = ICompanyRegister(Dummy().values)
+        self.reg = ICompanyRegister()
+
     def test_getRecords(self):
         with self.assertRaises(NotImplementedError):
             self.reg.getRecords(111111, None, None)

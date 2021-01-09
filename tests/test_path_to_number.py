@@ -3,16 +3,29 @@ import os
 from shutil import copyfile, rmtree
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from autoinvoice.InvoiceNumbering.plugins.path_to_number import PathToNumber
-from .dummy import Dummy
+#
+from autoinvoice.mod_invoice_numbering.plugins.path_to_number import PathToNumber
+from autoinvoice import configs
 from .cmdline_creator import CmdlineCreator
 
 template = 'tests/data/template_path_to_number.tex'
 config = 'tests/data/config_path_to_number'
 
+
 class TestPathToNumber(unittest.TestCase):
+    def setUp(self):
+        configs.reload_configuraiton()
+        self.database_path = '/tmp/.autoinvoice'
+        self.database = '{}/dbase.db'.format(self.database_path)
+
+        configs.config.set('Plugins', 'mod_invoice_numbering', 'path_to_number')
+        configs.config.set('Paths', 'database', self.database)
+
+    def tearDown(self):
+        rmtree(self.database_path, ignore_errors=True)
+
     def test_path(self):
-        ptn = PathToNumber(Dummy().values)
+        ptn = PathToNumber()
         self.assertEqual('/repos', ptn())
 
     def test_real_path(self):
@@ -21,7 +34,7 @@ class TestPathToNumber(unittest.TestCase):
             path = os.path.join(tmpdir, pathx) 
             os.makedirs(path)
             os.chdir(path)
-            ptn = PathToNumber(Dummy().values)
+            ptn = PathToNumber()
             self.assertEqual('01/202006', ptn())
 
     def test_real_path_desc(self):
@@ -30,12 +43,8 @@ class TestPathToNumber(unittest.TestCase):
             path = os.path.join(tmpdir, pathx) 
             os.makedirs(path)
             os.chdir(path)
-            ptn = PathToNumber(Dummy().values)
+            ptn = PathToNumber()
             self.assertEqual('02/202006', ptn())
-
-    def setUp(self):
-        self.database_path = '/tmp/.autoinvoice'
-        self.database = '{}/dbase.db'.format(self.database_path)
 
     def test_feel_template(self):
         Path(self.database_path).mkdir(exist_ok=True)
@@ -76,7 +85,7 @@ class TestPathToNumber(unittest.TestCase):
 \\setaddress{ul. Lajosa Kossutha 12 lok. 48 \\\\ 01-315 Warszawa}
 \\setcompanyid{5222680297}
 \\setphonenumber{+48662152026}
-\\setemail{guns4hire@pm.me}
+\\setemail{lukasz.busko@guns4hire.cc}
 \\setaccountnumber{04 1140 2004 0000 3102 7864 4964}
 \\setdeadline{10}
 \\setinvoicenumber{/repos}
@@ -104,8 +113,3 @@ class TestPathToNumber(unittest.TestCase):
             if out[i] != exp[i]:
                 print(out[i], '<=>', exp[i])
             self.assertEqual(out[i], exp[i])
-
-    def tearDown(self):
-        rmtree(self.database_path, ignore_errors=True)
-
-

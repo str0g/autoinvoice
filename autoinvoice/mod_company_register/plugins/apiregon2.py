@@ -22,7 +22,7 @@ from enum import IntEnum
 
 from RegonAPI import RegonAPI, ApiAuthenticationError
 
-from ..ICompanyRegister import ICompanyRegister
+from autoinvoice.mod_company_register.plugins.iface import ICompanyRegister
 
 
 class APIREGON2(ICompanyRegister):

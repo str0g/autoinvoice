@@ -3,10 +3,11 @@ import os
 from pathlib import Path
 from shutil import copyfile, rmtree
 
-from autoinvoice.items_reader.read_items import read_items
+from autoinvoice.mod_items_reader.manager import manager
 
-from .dummy import Dummy
+from .utils import set_default_config
 from .cmdline_creator import CmdlineCreator
+from autoinvoice import configs
 
 template = 'tests/data/template_read_json.tex'
 config = 'tests/data/config_read_json'
@@ -15,10 +16,10 @@ path_json = 'tests/data/items2.json'
 
 class TestReadJson(unittest.TestCase):
     def setUp(self):
-        self.dummy = Dummy()
-
         self.database_path = '/tmp/.autoinvoice'
         self.database = '{}/dbase.db'.format(self.database_path)
+
+        set_default_config()
 
     def tearDown(self):
         rmtree(self.database_path, ignore_errors=True)
@@ -41,15 +42,14 @@ class TestReadJson(unittest.TestCase):
             'total': '29524.92'
                 }]
         for index, path in enumerate(paths):
-            self.dummy.values.items = path
-            out = read_items(self.dummy.values)
+            configs.config.set('Options', 'items', path)
+            out = manager()
             self.assertDictEqual(out, dicts[index])
 
     def test_read_json_neg(self):
-        self.failureException(read_items(self.dummy.values))
-        self.dummy.values.items = 'tests/data/items1.csv'
+        configs.config.set('Options', 'items', 'tests/data/items1.csv')
         with self.assertRaises(KeyError):
-            read_items(self.dummy.values)
+            manager()
 
     def test_template(self):
         Path(self.database_path).mkdir(exist_ok=True)
@@ -90,7 +90,7 @@ class TestReadJson(unittest.TestCase):
 \\setaddress{ul. Lajosa Kossutha 12 lok. 48 \\\\ 01-315 Warszawa}
 \\setcompanyid{5222680297}
 \\setphonenumber{+48662152026}
-\\setemail{guns4hire@pm.me}
+\\setemail{lukasz.busko@guns4hire.cc}
 \\setaccountnumber{04 1140 2004 0000 3102 7864 4964}
 \\setdeadline{10}
 \\setinvoicenumber{/repos}

@@ -1,5 +1,6 @@
 from subprocess import Popen, PIPE
 
+
 class CmdlineCreator:
     def __init__(self, cmd: dict = None, extra_cmd: dict = {}):
         self.cmdline = None
@@ -7,19 +8,13 @@ class CmdlineCreator:
         self.cmd = {
             'generate': None, #should be [] as input
             'update': None,
-            'configuration': '',
+            'configuration': None,
             'database': '/tmp/.autoinvoice/dbase.db',
-            'template': '',
+            'template': None,
             'output': None,
-            'taxpayerid': '',
+            'taxpayerid': None,
             'items': None,
             'verbose': True,
-            'name': '',
-            'url': '',
-            'key': '',
-            'register': 'apiregon',
-            'invoice_numbering': '',
-            'qrcode_generator': ''
         }
         if cmd:
             self.cmd.update(cmd)
@@ -31,6 +26,15 @@ class CmdlineCreator:
 
         self.cmdline.append('-c')
         self.cmdline.append(self.cmd['configuration'])
+
+        if self.cmd['template']:
+            self.cmdline.append('-t')
+            self.cmdline.append(self.cmd['template'])
+
+        if self.cmd['taxpayerid']:
+            self.cmdline.append('--taxpayerid')
+            self.cmdline.append(self.cmd['taxpayerid'])
+            self.cmdline.append(f"{self.cmd['name']}")
 
         if 'generate' in self.cmd and self.cmd['generate']:
             for c in self.cmd['generate']:

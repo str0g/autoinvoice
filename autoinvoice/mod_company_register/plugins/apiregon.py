@@ -21,7 +21,7 @@
 from litex.regon import REGONAPI, REGONAPIError
 from requests.exceptions import MissingSchema
 
-from ..ICompanyRegister import ICompanyRegister
+from autoinvoice.mod_company_register.plugins.iface import ICompanyRegister
 
 
 class APIREGON(ICompanyRegister):

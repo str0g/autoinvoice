@@ -1,7 +1,6 @@
 [Common]
 url=
 key=
-register=apiregon
 
 [Paths]
 database=/tmp/.autoinvoice/dbase.db
@@ -14,9 +13,9 @@ name=Łukasz Buśko
 account_number = 93114020040000320300621961
 
 [Plugins]
-qrcode_generator = zbp2d
-invoice_numbering = path_to_number
+mod_company_register = apiregon2
+mod_invoice_numbering = path_to_number
+mod_qrcodes = zbp2d
 
-[QRCode]
-account_number = 93114020040000320300621961
+[zbp2d]
 country_iso = PL

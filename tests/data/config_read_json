@@ -1,10 +1,10 @@
 [Common]
 url=
 key=
-register=apiregon
 
 [Plugins]
-invoice_numbering = path_to_number
+mod_company_register = apiregon2
+mod_invoice_numbering = path_to_number
 
 [Paths]
 database=/tmp/.autoinvoice/dbase.db

@@ -20,22 +20,21 @@
 
 import unittest
 
-from .dummy import Dummy
-
-from autoinvoice.CompanyRegister.plugins.apiregon import APIREGON
-from autoinvoice.CompanyRegister.CompanyRegisterPluginManager import getCompanyRegister
+from autoinvoice.mod_company_register.plugins.apiregon2 import APIREGON2
+from autoinvoice.mod_company_register.manager import manager
+from autoinvoice import configs
 
 
 class TestgetCompanyRegister(unittest.TestCase):
+    def setUp(self):
+        configs.reload_configuraiton()
+        configs.config.set('Plugins', 'mod_company_register', 'apiregon2')
+
     def test_getCompanyRegister(self):
-        inp = Dummy()
-        inp.values.verbose = True
-        inp.values.register = 'apiregon'
-        self.assertIs(APIREGON, type(getCompanyRegister(inp.values)))
+        self.assertIs(APIREGON2, type(manager()))
 
     def test_getCompanyRegister_neg(self):
-        inp = Dummy()
-        inp.values.verbose = True
-        inp.values.register = 'CZ'
+        configs.config.set('Plugins', 'mod_company_register', 'CZ')
+        configs.config.set('Options', 'verbose', 'True')
         with self.assertRaises(KeyError):
-            getCompanyRegister(inp.values)
+            manager()

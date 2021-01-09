@@ -17,15 +17,27 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
+from os import getcwd, sep
+from autoinvoice.mod_invoice_numbering.plugins.iface import IFace
 
-from ..common import get_plugins
-from ..CompanyRegister import plugins
+
+class PathToNumber(IFace):
+    def __call__(self):
+        """
+        Get current and top directory and format form it string
+        current/top
+        """
+        path = getcwd().split(sep)[-2:]
+        if path[1].isnumeric():
+            number = path[1]
+        else:
+            for i, s in enumerate(path[1]):
+                if not s.isnumeric():
+                    break
+            number = path[1][:i]
+
+        return '{}/{}'.format(number, path[0])
 
 
-def getCompanyRegister(options):
-    """
-    Register plugin name
-    """
-    plugins_list = get_plugins(plugins)
-    key = 'autoinvoice.CompanyRegister.plugins.{}'.format(options.register)
-    return plugins_list[key].get()(options)
+def get():
+    return PathToNumber

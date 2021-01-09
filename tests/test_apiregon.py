@@ -20,8 +20,7 @@
 
 import unittest
 
-from autoinvoice.CompanyRegister.plugins.apiregon import APIREGON
-from .dummy import Dummy
+from autoinvoice.mod_company_register.plugins.apiregon import APIREGON
 
 
 class TestAPIREGON(unittest.TestCase):
@@ -32,7 +31,7 @@ class TestAPIREGON(unittest.TestCase):
 
         sample2_out = [{'taxpayerid': 'nnnnnnnnnn', 'regon': 'xxxxxxxxx', 'companyname': 'AAAAAAAA', 'state': 'LUBELSKIE', 'address': 'ul. Test-Wilcza yy', 'postcode': '23-200', 'city': 'Kraśnik', 'refere': '@TODO'}, {'taxpayerid': 'nnnnnnnnnn', 'regon': 'xxxxxxxxx', 'companyname': 'GOSPODARSTWO ROLNE', 'state': 'LUBELSKIE', 'address' : 'zz', 'postcode': '23-213', 'city': 'Sulów', 'refere': '@TODO'}]
 
-        krs = APIREGON(Dummy().values)
+        krs = APIREGON()
         for path in paths:
             out = krs.getRecords(path, None, None)
             if path == paths[0]:
@@ -44,7 +43,7 @@ class TestAPIREGON(unittest.TestCase):
 
     def test_getRecords_neg(self):
         with self.assertRaises(ValueError):
-            krs = APIREGON(Dummy().values)
+            krs = APIREGON()
             out = krs.getRecords(None, None, None)
 
     def test_getRecordswithAPI(self):
@@ -53,7 +52,7 @@ class TestAPIREGON(unittest.TestCase):
         url = 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'
         key = 'abcde12345abcde12345'
 
-        krs = APIREGON(Dummy().values)
+        krs = APIREGON()
         out = krs.getRecords(exp['taxpayerid'], url, key)[0]
 
         self.assertDictEqual(exp, out)

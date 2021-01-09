@@ -17,10 +17,12 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
+from autoinvoice import configs
+
 
 class ICompanyRegister:
-    def __init__(self, options):
-        self.verbose = options.verbose
+    def __init__(self):
+        self.verbose = configs.config.getboolean('Options', 'verbose', fallback=False)
 
     def getRecords(self, TaxPayerId, url, key) -> []:
         """

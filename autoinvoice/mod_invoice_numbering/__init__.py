@@ -18,10 +18,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-class IInvoiceNumber:
-    def __init__(self, options):
-        self.verbose = options.verbose
-
-    def __call__(self) -> str:
-        raise NotImplementedError("Pure virtual method")
-
+from .manager import manager
+name = 'mod_invoice_numbering'
