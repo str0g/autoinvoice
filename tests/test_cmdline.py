@@ -25,7 +25,6 @@ from os.path import expanduser
 from pathlib import Path
 import filecmp
 
-from autoinvoice import cmdline
 from .dummy import Dummy
 from .configuration_creator import ConfigurationCreator
 from .cmdline_creator import CmdlineCreator
@@ -41,7 +40,7 @@ class TestOptions(unittest.TestCase):
     def test_tax_ref(self):
         inputx = ['12345', 'name surename']
         parser = Dummy()
-        cmdline.tax_ref(None, None, inputx, parser)
+        configs.tax_ref(None, None, inputx, parser)
 
         self.assertEqual(inputx[0], parser.values.taxpayerid)
         self.assertEqual(inputx[1], parser.values.name)
@@ -50,7 +49,7 @@ class TestOptions(unittest.TestCase):
         inputx = ['12345a', 'name surename']
         parser = Dummy()
         with self.assertRaises(ValueError):
-            cmdline.tax_ref(None, None, inputx, parser)
+            configs.tax_ref(None, None, inputx, parser)
 
     def test_options(self):
         default = {'generate': None, 'update': None, 'configuration': expanduser('~/.autoinvoice/config'),
