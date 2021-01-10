@@ -42,7 +42,7 @@ class Zbp2d(IQRCode):
         super(IQRCode, self).__init__()
 
         amount = data['total'].replace('.', '')
-        companyname = data['companyname']
+        companyname = data['ref_companyname']
         invoice_number = data['invoice_number']
         taxpayerid = configs.config.get('Refere', 'taxpayerid')
         account_number = configs.config.get('Refere', 'account_number')

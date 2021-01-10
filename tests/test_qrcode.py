@@ -45,7 +45,7 @@ class TestGetQRCode_simple(unittest.TestCase):
         amount = Decimal(666.71).quantize(Decimal('1.00'))
         self.default_data = {
             'invoice_number': '01/12/2020',
-            'companyname': 'GUNS4HIRE',
+            'ref_companyname': 'GUNS4HIRE',
             'total': str(amount)
         }
 
@@ -123,6 +123,8 @@ class TestGetQRCode_simple(unittest.TestCase):
             {'-d': self.database},
         )
 
+
+
         code, out = cc.run()
         self.assertEqual(code, 0)
         exp = '''\
@@ -170,7 +172,7 @@ class TestGetQRCode_simple(unittest.TestCase):
 \\setwithqrcodes
 \\setqrcodebankpayment{qrcode.png}
 \\begin{filecontents*}{qrcode.64}
-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
+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
 \\end{filecontents*}
 
 \\begin{document}
@@ -181,4 +183,5 @@ iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCAQAAAABUY/ToAAADd0lEQVR4nO2cX4qkMBCHv1qFflTYA8xR
 \\end{document}
 
 '''
+        self.maxDiff = None
         self.assertListEqual(out, exp.split('\n'))
