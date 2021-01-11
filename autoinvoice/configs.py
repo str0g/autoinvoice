@@ -63,6 +63,27 @@ def get_options():
     return options
 
 
+def format_bank_number(account_number: str) -> str:
+    #Does not matter if its iBan or NRB
+    NRB = 0x1a
+    iBan = 0x16
+
+    account_number = account_number.replace(' ', '')
+    xlen = len(account_number)
+    if not xlen:
+        return account_number
+    if not (iBan == xlen or NRB == xlen):
+        raise ValueError(f'Unknown bank number format {xlen}, {account_number}')
+
+    tmp = [account_number[:2]]
+    i=2
+    while i < xlen:
+        tmp.append(account_number[i:i+4])
+        i += 4
+
+    return ' '.join(tmp)
+
+
 def get_configuration(options):
     config = ConfigParser()
     #read default values
@@ -96,6 +117,8 @@ def get_configuration(options):
 
     expand_user_path(config, 'Paths', 'database')
     expand_user_path(config, 'Paths', 'template')
+
+    config.set('Refere', 'account_number', format_bank_number(config.get('Refere', 'account_number')))
 
     return config
 

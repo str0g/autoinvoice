@@ -45,7 +45,7 @@ class Zbp2d(IQRCode):
         companyname = data['ref_companyname']
         invoice_number = data['invoice_number']
         taxpayerid = configs.config.get('Refere', 'taxpayerid')
-        account_number = configs.config.get('Refere', 'account_number')
+        account_number = configs.config.get('Refere', 'account_number').replace(' ', '')
         country_iso = configs.config.get('zbp2d', 'country_iso')
         #
         if len(str(taxpayerid)) > 10:

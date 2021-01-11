@@ -38,3 +38,18 @@ class TestConfigs(unittest.TestCase):
         config.write(output)
 
         self.assertEqual(output.getvalue(), default_configs_string)
+
+    def test_format_bank_number(self):
+        nrb = '04 1140 2004 0000 3102 7864 4964'
+        self.assertEqual(configs.format_bank_number(nrb), nrb)
+
+        iban = '04 1140 2004 0000 3102 7864 4964'
+        self.assertEqual(configs.format_bank_number(iban), iban)
+
+        with self.assertRaises(ValueError):
+            num = '04 1140 2004 0000 3102 786'
+            configs.format_bank_number(num)
+
+        with self.assertRaises(ValueError):
+            num = '04 1140 2004 0000 3102 7864 4964 5'
+            configs.format_bank_number(num)

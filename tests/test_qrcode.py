@@ -152,7 +152,7 @@ class TestGetQRCode_simple(unittest.TestCase):
 \\setcompanyid{5222680297}
 \\setphonenumber{+48662152026}
 \\setemail{lukasz.busko@guns4hire.cc}
-\\setaccountnumber{93114020040000320300621961}
+\\setaccountnumber{93 1140 2004 0000 3203 0062 1961}
 \\setdeadline{10}
 \\setinvoicenumber{/repos}
 
