@@ -18,8 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
+from autoinvoice.common import pure_virtual
+
 
 class IFace:
+    @pure_virtual
     def __call__(self) -> str:
-        raise NotImplementedError("Pure virtual method")
+        return 'invoice number'
 
+
+@pure_virtual
+def get():
+    return IFace

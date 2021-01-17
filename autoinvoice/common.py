@@ -32,3 +32,9 @@ def get_plugins(plugins):
         for finder, name, ispkg
         in _iter_namespace(plugins)
     }
+
+
+def pure_virtual(func):
+    def inner(*args, **kwargs):
+        raise NotImplementedError(f'function {func.__name__} {args} is pure virtual and must be implemented in derived class')
+    return inner

@@ -74,7 +74,7 @@ class TestGetQRCode_simple(unittest.TestCase):
         self.assertIsInstance([key for key in qr.keys()][0], str)
         self.assertIsInstance([value for value in qr.values()][0], str)
         #
-        qrbytes = qr['qrcode'].encode('utf-8')
+        qrbytes = qr['qrcode_zbp2d'].encode('utf-8')
         np = numpy.asarray(bytearray(base64.b64decode(qrbytes)), dtype=numpy.uint8)
         img = cv2.imdecode(np, cv2.IMREAD_UNCHANGED)
         #

@@ -18,13 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-
-from io import BytesIO
-import base64
-
 from autoinvoice import configs
-import qrcode
-
 from .iface import IQRCode
 
 
@@ -70,6 +64,8 @@ class Zbp2d(IQRCode):
 |\
 |"
 
+    def get_name(self):
+        return Zbp2d.__name__.lower()
 
 def get():
     return Zbp2d

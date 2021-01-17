@@ -126,5 +126,6 @@ class APIREGON2(ICompanyRegister):
         result = api.dataDownloadFullReport(regon, self.REPORTS[self.EnumReports.BIR11OsFizycznaDaneOgolne])[0]
         return "{} {}".format(result['fiz_imie1'].capitalize(), result['fiz_nazwisko'].capitalize())
 
+
 def get():
     return APIREGON2

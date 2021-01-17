@@ -18,17 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 from autoinvoice import configs
+from autoinvoice.common import pure_virtual
 
 
 class ICompanyRegister:
     def __init__(self):
         self.verbose = configs.config.getboolean('Options', 'verbose', fallback=False)
 
+    @pure_virtual
     def getRecords(self, TaxPayerId, url, key) -> []:
         """
         Return vector with dictionaries related to single tax payer id
         """
-        raise NotImplementedError("Pure virtual method")
+        return [self.buildRecord(...)]
 
     def buildRecord(self, taxpayerid, regon, companyname, state, address, postcode, city, refere) -> dict:
         if not isinstance(taxpayerid, str):
@@ -75,3 +77,8 @@ class ICompanyRegister:
                 'ref_city' : record['city'],
                 'ref_refere' : record['refere'],
                 }
+
+
+@pure_virtual
+def get():
+    return ICompanyRegister
