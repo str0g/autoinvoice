@@ -24,11 +24,12 @@ from os import remove
 from os.path import expanduser
 from pathlib import Path
 import filecmp
+import sys
 
 from .dummy import Dummy
 from .configuration_creator import ConfigurationCreator
 from .cmdline_creator import CmdlineCreator
-from .utils import set_default_config, default_configs_string
+from .utils import set_default_config, default_configs_string, reload_configuration_to_defaults
 from autoinvoice import configs
 
 test_config = 'tests/data/config'
@@ -52,7 +53,10 @@ class TestOptions(unittest.TestCase):
             configs.tax_ref(None, None, inputx, parser)
 
     def test_options(self):
-        default = {'generate': None, 'update': None, 'configuration': expanduser('~/.autoinvoice/config'),
+        if '--verbose' in sys.argv:
+            sys.argv.remove('--verbose')
+        reload_configuration_to_defaults()
+        default = {'generate': None, 'update': None, 'configuration': 'does-not-exist',
                 'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'items': None, 'verbose': False}
 
         self.assertDictEqual(configs.options.__dict__, default)
@@ -60,10 +64,10 @@ class TestOptions(unittest.TestCase):
 
 class TestConfiguration(unittest.TestCase):
     def setUp(self):
+        reload_configuration_to_defaults()
         set_default_config()
 
     def test_default(self):
-        import sys
         from io import StringIO
 
         class RedirectedStdout:

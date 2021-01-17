@@ -119,7 +119,6 @@ def get_configuration(options):
                             'email': '',
                         },
             })
-
     config.read([options.configuration], encoding='utf-8')
 
     def expand_user_path(config, *args):
@@ -131,8 +130,8 @@ def get_configuration(options):
     expand_user_path(config, 'Paths', 'template')
 
     config.set('Refere', 'account_number', format_bank_number(config.get('Refere', 'account_number')))
-    if is_email(config.get('Refere', 'email')):
-        print(f"email addres might not be valid {config.get('Refere', 'email')}")
+    if not is_email(config.get('Refere', 'email')):
+        print(f"email address might not be valid {config.get('Refere', 'email')}")
 
     return config
 
@@ -173,4 +172,6 @@ config, options = set_configuration()
 
 
 def reload_configuraiton():
+    global config
+    global options
     config, options = set_configuration()

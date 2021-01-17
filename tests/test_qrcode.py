@@ -31,7 +31,7 @@ import numpy
 from autoinvoice.mod_qrcode.plugins.zbp2d import Zbp2d
 from autoinvoice.mod_qrcode.manager import manager
 from autoinvoice import configs
-from .utils import set_default_config
+from .utils import set_default_config, reload_configuration_to_defaults
 from .cmdline_creator import CmdlineCreator
 
 template = 'tests/data/template_qrcode.tex'
@@ -111,19 +111,17 @@ class TestGetQRCode_simple(unittest.TestCase):
 
     def test_template(self):
         Path(self.database_path).mkdir(exist_ok=True)
-        os.makedirs('{}/202012/01_tmp_dir'.format(self.database_path))
         copyfile('tests/data/dbase.db', self.database)
         path_config = '{}/{}'.format(self.database_path, 'config_qrcode_zbp2d')
         test_template = '{}/{}'.format(self.database_path, 'template_qrcode.tex')
-        copyfile(config, path_config)
+
         copyfile(template, test_template)
+        copyfile(config, path_config)
 
         cc = CmdlineCreator(
-            {'configuration': path_config, 'generate': ['5261040828'], 'verbose': False, 'items': path_json},
+            {'configuration': config, 'generate': ['5261040828'], 'verbose': False, 'items': path_json},
             {'-d': self.database},
         )
-
-
 
         code, out = cc.run()
         self.assertEqual(code, 0)
@@ -183,5 +181,6 @@ iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCAQAAAABUY/ToAAADbklEQVR4nO2cQY7iMBBFf00i9dJIcwCO
 \\end{document}
 
 '''
+
         self.maxDiff = None
         self.assertListEqual(out, exp.split('\n'))

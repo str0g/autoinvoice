@@ -24,12 +24,12 @@ from io import StringIO
 
 
 from autoinvoice import configs
-from .utils import default_configs_string
+from .utils import default_configs_string, reload_configuration_to_defaults
 
 
 class TestConfigs(unittest.TestCase):
     def setUp(self) -> None:
-        configs.reload_configuraiton()
+        reload_configuration_to_defaults()
 
     def test_default_settings_no_options(self):
         config = configs.config

@@ -1,4 +1,5 @@
 from os.path import expanduser
+import sys
 
 from autoinvoice import configs
 
@@ -26,6 +27,14 @@ email =
 
 """
 
+
+def reload_configuration_to_defaults():
+    sys.argv.append('-c')
+    sys.argv.append('does-not-exist')
+    configs.reload_configuraiton()
+
+
+# @TODO this function needs to be renamed
 def set_default_config():
     configs.config.set('Refere', 'taxpayerid', '5222680297')
     configs.config.set('Refere', 'account_number', '93114020040000320300621961')

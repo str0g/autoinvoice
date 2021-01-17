@@ -25,7 +25,7 @@ from os import remove
 
 from autoinvoice.driver import Driver
 from autoinvoice import configs
-from .utils import set_default_config
+from .utils import set_default_config, reload_configuration_to_defaults
 
 
 class TestDriver(unittest.TestCase):
@@ -35,7 +35,8 @@ class TestDriver(unittest.TestCase):
         self.database = '{}/dbase.db'.format(self.database_path)
         copyfile('tests/data/dbase.db', self.database)
 
-        configs.reload_configuraiton()
+        #configs.reload_configuraiton()
+        reload_configuration_to_defaults()
         set_default_config()
         configs.config.set('Paths', 'database', self.database)
         configs.config.set('Paths', 'template', 'tests/data/template1.tex')
