@@ -53,3 +53,25 @@ class TestConfigs(unittest.TestCase):
         with self.assertRaises(ValueError):
             num = '04 1140 2004 0000 3102 7864 4964 5'
             configs.format_bank_number(num)
+
+    def test_email(self):
+        invalid_email1 = '@'
+        invalid_email2 = '@email'
+        invalid_email3 = 'a@email'
+        invalid_email4 = 'a@'
+
+        no_email = ''
+        valid_email1 = 'm@m.m'
+        valid_email2 = 'lukasz.busko@guns4hire.cc'
+        valid_email3 = 'lukasz.busko@dom.longext'
+
+        self.assertFalse(configs.is_email(invalid_email1))
+        self.assertFalse(configs.is_email(invalid_email2))
+        self.assertFalse(configs.is_email(invalid_email3))
+        self.assertFalse(configs.is_email(invalid_email4))
+
+        self.assertTrue(configs.is_email(no_email))
+        # will fail regexp needs to be adjusted
+        self.assertFalse(configs.is_email(valid_email1))
+        self.assertTrue(configs.is_email(valid_email2))
+        self.assertTrue(configs.is_email(valid_email3))

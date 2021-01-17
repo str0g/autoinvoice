@@ -22,6 +22,10 @@
 from optparse import OptionParser
 from configparser import ConfigParser
 from os.path import expanduser
+import re
+
+
+email_validation_regex = '^[a-z0-9]+[\._-]?[a-z0-9]+[@]\w+[.]\w+$'
 
 
 def tax_ref(option, opt_str, value, parser):
@@ -84,6 +88,13 @@ def format_bank_number(account_number: str) -> str:
     return ' '.join(tmp)
 
 
+def is_email(email: str):
+    if not email:
+        return True
+
+    return True if re.search(email_validation_regex, email) else False
+
+
 def get_configuration(options):
     config = ConfigParser()
     #read default values
@@ -105,6 +116,7 @@ def get_configuration(options):
                             'taxpayerid': '',
                             'name': '',
                             'account_number': '',
+                            'email': '',
                         },
             })
 
@@ -119,6 +131,8 @@ def get_configuration(options):
     expand_user_path(config, 'Paths', 'template')
 
     config.set('Refere', 'account_number', format_bank_number(config.get('Refere', 'account_number')))
+    if is_email(config.get('Refere', 'email')):
+        print(f"email addres might not be valid {config.get('Refere', 'email')}")
 
     return config
 

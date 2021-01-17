@@ -88,7 +88,8 @@ class Driver:
 
     def configs_to_template_dict(self) -> dict:
         return {
-            'ref_account_number': configs.config.get('Refere', 'account_number')
+            'ref_account_number': configs.config.get('Refere', 'account_number'),
+            'ref_email': configs.config.get('Refere', 'email')
         }
 
     def generateInvoiceTemplete(self, taxpayerid):

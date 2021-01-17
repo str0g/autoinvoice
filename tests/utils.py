@@ -20,6 +20,7 @@ template = /usr/share/polishinvoice/templates/simple.tex
 taxpayerid = 
 name = 
 account_number = 
+email = 
 
 [Options]
 
