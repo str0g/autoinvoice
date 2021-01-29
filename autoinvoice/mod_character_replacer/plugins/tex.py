@@ -1,7 +1,8 @@
-#! /bin/sh
+# -*- coding: utf-8 -*-
+
 #################################################################################
 #    Autoinvoice is a program to automate invoicing process                     #
-#    Copyright (C) 2019  Łukasz Buśko                                           #
+#    Copyright (C) 2021  Łukasz Buśko                                           #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -17,25 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-function test {
-	$1
-#	if [ $? -ne 0 ]; then
-#		exit $?
-#	fi
-}
+from .iface import ICharacterReplacer
 
-rm -r $(find . -name "__pycache__" -type d)
-find . -name "*.pyc" -type f -exec rm {} \;
 
-test "python3 -m unittest tests/test_ICompanyRegister.py"
-test "python3 -m unittest tests/test_apiregon.py"
-test "python3 -m unittest tests/test_apiregon2.py"
-test "python3 -m unittest tests/test_CompanyRegisterPluginManager.py"
-test "python3 -m unittest tests/test_database.py"
-test "python3 -m unittest tests/test_driver.py"
-test "python3 -m unittest tests/test_cmdline.py"
-test "python3 -m unittest tests/test_path_to_number.py"
-test "python3 -m unittest tests/test_read_json.py"
-test "python3 -m unittest tests/test_qrcode.py"
-test "python3 -m unittest tests/test_configs.py"
-test "python3 -m unittest tests/test_character_replacer.py"
+class Tex(ICharacterReplacer):
+    CHARACTER_TO_REPLACE = '&%$#_{}~^\\'
+
+
+def get() -> Tex:
+    return Tex

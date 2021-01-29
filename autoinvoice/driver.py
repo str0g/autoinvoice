@@ -26,6 +26,7 @@ from .mod_company_register.database import DataBase
 from .mod_invoice_numbering import manager as manager_invoice_numbering
 from .mod_items_reader.manager import manager as manager_items
 from .mod_qrcode.manager import manager as manager_qr
+from .mod_character_replacer.manager import manager as manager_replacer
 
 
 class Driver:
@@ -35,6 +36,7 @@ class Driver:
         self.invoice_number = manager_invoice_numbering()
         self.invoice_items = manager_items()
         self.mod_qrcode = manager_qr()
+        self.mod_replacer = manager_replacer()
         self.url = configs.config.get('Common', 'url')
         self.key = configs.config.get('Common', 'key')
         self.ref_taxpayerid = configs.config.get('Refere', 'taxpayerid')
@@ -107,6 +109,9 @@ class Driver:
             client.update(plugins(client)())
 
         client.update(self.configs_to_template_dict())
+
+        if self.mod_replacer:
+            self.mod_replacer(client)
 
         with open(configs.config.get('Paths', 'template')) as fd:
             template = fd.read()

@@ -104,3 +104,7 @@ count taxes and other amounts (refer to templates in tests/data).
 
 - ```zbp2d``` - compatible with [Polish Banks standards](https://zbp.pl/public/repozytorium/dla_bankow/rady_i_komitety/bankowosc_elektroczniczna/rada_bankowosc_elektr/zadania/2013.12.03_-_Rekomendacja_-_Standard_2D.pdf)
 and require additional configuration section.
+
+### Character replacer
+
+- ```tex``` - makes special characters plain before filling tex template
