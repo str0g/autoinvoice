@@ -53,6 +53,8 @@ def get_options():
     parser.add_option("--taxpayerid", action="callback", type="string", nargs=2, callback=tax_ref,
             help="<taxpayerid> \"<name surename>\"")
     parser.add_option("-i", "--items", type="string", help="File with items")
+    parser.add_option("--nobuilder", action="store_true", default=False, dest="nobuilder",
+            help="Do not build")
     parser.add_option("-v", "--verbose", action="store_true", default=False, dest="verbose",
             help="Verbouse")
 
@@ -107,6 +109,7 @@ def get_configuration(options):
                             'mod_company_register': 'apiregon2',
                             'mod_invoice_numbering': '',
                             'mod_qrcodes': '',
+                            'mod_builder': '',
                         },
             'Paths': {
                             'database': '~/.autoinvoice/dbase.db',
@@ -151,6 +154,8 @@ def update_configuration(options, config):
         config.set('Refere', 'name', options.name)
     if options.items:
         config.set('Options', 'items', options.items)
+    if options.nobuilder:
+        config.set('Options', 'nobuilder', str(options.nobuilder))
     if options.verbose:
         config.set('Options', 'verbose', str(options.verbose))
 

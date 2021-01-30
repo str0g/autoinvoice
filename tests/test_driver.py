@@ -19,34 +19,20 @@
 #################################################################################
 
 import unittest
-from pathlib import Path
-from shutil import copyfile
-from os import remove
 
 from autoinvoice.driver import Driver
 from autoinvoice import configs
-from .utils import set_default_config, reload_configuration_to_defaults
+from .utils import reload_configuration_to_defaults, use_temporary_directory
+
+config = 'tests/data/configs/config.json'
 
 
 class TestDriver(unittest.TestCase):
     def setUp(self):
-        self.database_path = '/tmp/.autoinvoice'
-        Path(self.database_path).mkdir(exist_ok=True)
-        self.database = '{}/dbase.db'.format(self.database_path)
-        copyfile('tests/data/dbase.db', self.database)
+        reload_configuration_to_defaults(config)
 
-        #configs.reload_configuraiton()
-        reload_configuration_to_defaults()
-        set_default_config()
-        configs.config.set('Paths', 'database', self.database)
-        configs.config.set('Paths', 'template', 'tests/data/template1.tex')
-        configs.config.set('Plugins', 'mod_company_register', 'apiregon2')
-
-    def tearDown(self):
-        remove(self.database)
-        Path(self.database_path).rmdir()
-
-    def test_generateInvoiceTemplate(self):
+    @use_temporary_directory
+    def test_fill_invoice_template(self, *args, **kwargs):
         exp = '''\
 \\documentclass[polish]{article}
 
@@ -90,6 +76,7 @@ class TestDriver(unittest.TestCase):
         taxpayerid = '5261040828'
 
         driver = Driver()
-        out = driver.generateInvoiceTemplete(taxpayerid)
+        driver.fill_invoice_template(taxpayerid)
+        out = driver.output()
         self.assertEqual(out, exp)
 

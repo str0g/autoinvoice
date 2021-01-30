@@ -1,11 +1,7 @@
-[Common]
-url=
-key=
-
 [Paths]
-database=/tmp/.autoinvoice/dbase.db
+database=tests/data/dbase.db
 #leave empty to use one provided in small buisness set, package(polishinvoice https://github.com/str0g/polishinvoice)
-template=tests/data/template_qrcode.tex
+template=tests/data/templates/qrcode.tex
 
 [Refere]
 taxpayerid=5222680297
@@ -14,7 +10,7 @@ account_number = 93114020040000320300621961
 
 [Plugins]
 mod_company_register = apiregon2
-mod_invoice_numbering = path_to_number
+mod_invoice_numbering = dummy_static
 mod_qrcodes = zbp2d
 
 [zbp2d]

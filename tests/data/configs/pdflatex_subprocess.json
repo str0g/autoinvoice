@@ -1,0 +1,13 @@
+[Refere]
+taxpayerid = 5222680297
+name = Łukasz Buśko
+account_number = 93114020040000320300621961
+
+[Plugins]
+mod_company_register = apiregon2
+mod_invoice_numbering = dummy_timebased
+mod_qrcodes = zbp2d
+mod_builder = pdflatex_subprocess
+
+[zbp2d]
+country_iso = PL

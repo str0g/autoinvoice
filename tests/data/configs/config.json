@@ -1,0 +1,9 @@
+[Plugins]
+mod_company_register = apiregon2
+
+[Paths]
+template = tests/data/templates/companies_only.tex
+
+[Refere]
+taxpayerid = 5222680297
+name = Łukasz Buśko

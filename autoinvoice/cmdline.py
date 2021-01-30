@@ -21,6 +21,7 @@
 from .driver import Driver
 from . import configs
 
+
 def main():
     options = configs.options
     if options.verbose:
@@ -33,14 +34,13 @@ def main():
             driver.updateRecord(str(taxpaierid))
     if options.generate:
         for taxpayerid in options.generate:
-            template = driver.generateInvoiceTemplete(taxpayerid)
+            driver.fill_invoice_template(taxpayerid)
+            invoice = driver.output()
             if not options.output:
-                print(template)
+                print(invoice)
             else:
-                index = options.output.rfind('.')
-                output = options.output[:index] + '-' + taxpayerid + options.output[index:]
-                with open(output, 'w') as fd:
-                    fd.write(template)
+                with open(options.output, 'w') as fd:
+                    fd.write(invoice)
 
     return 0
 

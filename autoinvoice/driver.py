@@ -27,6 +27,7 @@ from .mod_invoice_numbering import manager as manager_invoice_numbering
 from .mod_items_reader.manager import manager as manager_items
 from .mod_qrcode.manager import manager as manager_qr
 from .mod_character_replacer.manager import manager as manager_replacer
+from .mod_builder.manager import manager as manager_builder
 
 
 class Driver:
@@ -37,9 +38,11 @@ class Driver:
         self.invoice_items = manager_items()
         self.mod_qrcode = manager_qr()
         self.mod_replacer = manager_replacer()
+        self.mod_builder = manager_builder()
         self.url = configs.config.get('Common', 'url')
         self.key = configs.config.get('Common', 'key')
         self.ref_taxpayerid = configs.config.get('Refere', 'taxpayerid')
+        self.invoice = None
 
         self.database_init()
 
@@ -94,13 +97,14 @@ class Driver:
             'ref_email': configs.config.get('Refere', 'email')
         }
 
-    def generateInvoiceTemplete(self, taxpayerid):
+    def fill_invoice_template(self, taxpayerid):
         ref = self.crm.recordToRefere(self.getRecord(self.ref_taxpayerid))
         client = self.getRecord(taxpayerid)
         client.update(ref)
 
         if self.invoice_number:
             client.update(self.invoice_number)
+            configs.config.set('Options', 'invoice_number', client['invoice_number'])
 
         if self.invoice_items:
             client.update(self.invoice_items)
@@ -115,6 +119,11 @@ class Driver:
 
         with open(configs.config.get('Paths', 'template')) as fd:
             template = fd.read()
-            out = template.format(**client)
+            self.invoice = template.format(**client)
 
-        return out
+    def output(self):
+        if self.mod_builder and (not configs.config.getboolean('Options', 'nobuilder', fallback=False)):
+            inv_num = configs.config.get('Options', 'invoice_number')
+            self.mod_builder()(self.invoice, inv_num)
+
+        return self.invoice

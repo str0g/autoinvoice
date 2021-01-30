@@ -18,33 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-from io import BytesIO
-import base64
-
-import qrcode
+import os
+import stat
 
 from autoinvoice.common import pure_virtual
 
 
-class IQRCode:
-    def __init__(self):
-        self.to_qrcode = ''
-
-    def __call__(self) -> dict:
-        qr = qrcode.make(self.to_qrcode)
-        io = BytesIO()
-        #qr.save('test_qr.png')
-        qr.save(io, format='png')
-        io.seek(0)
-        b64 = base64.b64encode(io.getvalue()).decode('utf-8')
-
-        return {f'qrcode_{self.get_name()}': b64}
+class IBuilder:
+    def set_permissions(self, path: str, permissions=stat.S_IRUSR | stat.S_IWUSR):
+        os.chmod(path, permissions)
 
     @pure_virtual
-    def get_name(self):
-        return IQRCode.__name__
+    def __call__(self, template, filename: str):
+        # do some action
+        # set_permissions() on output file
+        pass
+
 
 @pure_virtual
-def get() -> IQRCode:
+def get() -> object:
     # Suppose to return class not allocation
-    return IQRCode
+    return IBuilder

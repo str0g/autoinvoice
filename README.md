@@ -18,25 +18,29 @@ Development
 Resources for tests should be used to build proper application configuration.
 ```
 tests/data/
-├── config
-├── config_apiregon
-├── config_path_to_number
-├── config_qrcode_zbp2d
-├── config_read_json
-├── dbase.db
-├── dbase.sql
-├── dbase_table.sql
-├── items1.json
-├── items2.json
-├── items3.json
-├── items4.json
-├── sample1.xml
-├── sample2.xml
-├── template1.tex
-├── template_path_to_number.tex
-├── template_qrcode.tex
-├── template_read_json.tex
-└── text-5261040828.tex
+|____dbase_table.sql
+|____configs
+| |____pdflatex_subprocess.json
+| |____zbp2d.json
+| |____read_json.json
+| |____path_to_number.json
+| |____config.json
+|____config
+|____dbase.db
+|____text-5261040828.tex
+|____config_apiregon
+|____templates
+| |____qrcode.tex
+| |____read_json.tex
+| |____companies_only.tex
+|____sample2.xml
+|____template_path_to_number.tex
+|____items2.json
+|____dbase.sql
+|____items3.json
+|____items4.json
+|____sample1.xml
+|____items1.json
 ```
 
 ### Storing new test data for later dbase usage
@@ -108,3 +112,7 @@ and require additional configuration section.
 ### Character replacer
 
 - ```tex``` - makes special characters plain before filling tex template
+
+### Builder
+
+- ```pdflatex_subprocess``` - creates pdf file as final result

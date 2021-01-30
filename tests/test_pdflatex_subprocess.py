@@ -18,33 +18,46 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-from io import BytesIO
-import base64
+import unittest
+import sys
 
-import qrcode
+from autoinvoice.mod_builder.manager import manager
+from autoinvoice.mod_builder.plugins.pdflatex_subprocess import PdfLatex
+from autoinvoice import configs
+from autoinvoice.driver import Driver
+from .utils import reload_configuration_to_defaults, use_temporary_directory
 
-from autoinvoice.common import pure_virtual
+template = 'tests/data/templates/qrcode.tex'
+config = 'tests/data/configs/pdflatex_subprocess.json'
+items = 'tests/data/items1.json'
 
 
-class IQRCode:
-    def __init__(self):
-        self.to_qrcode = ''
+class TestGetPdfLatexSubprocess(unittest.TestCase):
+    def setUp(self) -> None:
+        reload_configuration_to_defaults(config)
 
-    def __call__(self) -> dict:
-        qr = qrcode.make(self.to_qrcode)
-        io = BytesIO()
-        #qr.save('test_qr.png')
-        qr.save(io, format='png')
-        io.seek(0)
-        b64 = base64.b64encode(io.getvalue()).decode('utf-8')
+    def test_plugin(self):
+        configs.config.set('Plugins', 'mod_builder', 'pdflatex_subprocess')
+        plugin = manager()
+        self.assertEqual(plugin, PdfLatex)
 
-        return {f'qrcode_{self.get_name()}': b64}
+    def test_plugin_nobuild_option(self):
+        configs.config.set('Plugins', 'mod_builder', 'pdflatex_subprocess')
+        configs.config.set('Options', 'nobuilder', 'True')
+        plugin = manager()
+        self.assertIsNone(plugin)
 
-    @pure_virtual
-    def get_name(self):
-        return IQRCode.__name__
+    @use_temporary_directory
+    def test_build(self, *args, **kwargs):
+        tmpdirname = kwargs.get('tmpdirname')
+        sys.argv.append('--template')
+        sys.argv.append(template)
+        sys.argv.append('--items')
+        sys.argv.append(items)
 
-@pure_virtual
-def get() -> IQRCode:
-    # Suppose to return class not allocation
-    return IQRCode
+        configs.reload_configuraiton()
+
+        driver = Driver()
+        driver.fill_invoice_template(5222680297)
+
+        self.assertIsNotNone(driver.output())

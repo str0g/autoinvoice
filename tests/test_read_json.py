@@ -1,28 +1,38 @@
+# -*- coding: utf-8 -*-
+
+#################################################################################
+#    Autoinvoice is a program to automate invoicing process                     #
+#    Copyright (C) 2021  Łukasz Buśko                                           #
+#                                                                               #
+#    This program is free software: you can redistribute it and/or modify       #
+#    it under the terms of the GNU General Public License as published by       #
+#    the Free Software Foundation, either version 3 of the License, or          #
+#    (at your option) any later version.                                        #
+#                                                                               #
+#    This program is distributed in the hope that it will be useful,            #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of             #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
+#    GNU General Public License for more details.                               #
+#                                                                               #
+#    You should have received a copy of the GNU General Public License          #
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
+#################################################################################
+
 import unittest
-import os
-from pathlib import Path
-from shutil import copyfile, rmtree
 
 from autoinvoice.mod_items_reader.manager import manager
-
-from .utils import set_default_config
+from .utils import reload_configuration_to_defaults
 from .cmdline_creator import CmdlineCreator
 from autoinvoice import configs
 
-template = 'tests/data/template_read_json.tex'
-config = 'tests/data/config_read_json'
-path_json = 'tests/data/items2.json'
+template = 'tests/data/templates/read_json.tex'
+config = 'tests/data/configs/read_json.json'
+items = 'tests/data/items2.json'
 
 
 class TestReadJson(unittest.TestCase):
     def setUp(self):
-        self.database_path = '/tmp/.autoinvoice'
-        self.database = '{}/dbase.db'.format(self.database_path)
-
-        set_default_config()
-
-    def tearDown(self):
-        rmtree(self.database_path, ignore_errors=True)
+        reload_configuration_to_defaults(config)
 
     def test_read_json(self):
         paths = ['tests/data/items1.json', 'tests/data/items2.json']
@@ -52,17 +62,8 @@ class TestReadJson(unittest.TestCase):
             manager()
 
     def test_template(self):
-        Path(self.database_path).mkdir(exist_ok=True)
-        os.makedirs('{}/202006/03_tmp_dir'.format(self.database_path))
-        copyfile('tests/data/dbase.db', self.database)
-        path_config = '{}/{}'.format(self.database_path, 'config')
-        test_template = '{}/{}'.format(self.database_path, 'template.tex')
-        copyfile(config, path_config)
-        copyfile(template, test_template)
-
         cc = CmdlineCreator(
-            {'configuration': path_config, 'generate': ['5261040828'], 'verbose': False, 'items': path_json},
-            {'-d': self.database},
+            {'configuration': config, 'generate': ['5261040828'], 'verbose': False, 'items': items},
         )
 
         code, out = cc.run()
@@ -93,7 +94,7 @@ class TestReadJson(unittest.TestCase):
 \\setemail{lukasz.busko@guns4hire.cc}
 \\setaccountnumber{04 1140 2004 0000 3102 7864 4964}
 \\setdeadline{10}
-\\setinvoicenumber{/repos}
+\\setinvoicenumber{DummyStatic}
 
 \\setreceivername{GŁÓWNY URZĄD STATYSTYCZNY}
 \\setreceiveraddress{ul. Test-Krucza 208 \\\\ 00-925 Warszawa}
@@ -117,7 +118,4 @@ class TestReadJson(unittest.TestCase):
 '''
 
         exp = self.expected_output.format(LaTeX_U).split('\n')
-        for i in range(len(out)):
-            if out[i] != exp[i]:
-                print(out[i], '<=>', exp[i])
-            self.assertEqual(out[i], exp[i])
+        self.assertListEqual(out, exp)

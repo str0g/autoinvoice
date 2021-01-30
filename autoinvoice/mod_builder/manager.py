@@ -18,33 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-from io import BytesIO
-import base64
-
-import qrcode
-
-from autoinvoice.common import pure_virtual
+from ..common import get_plugins
+from ..mod_builder import plugins
+from .. import configs
 
 
-class IQRCode:
-    def __init__(self):
-        self.to_qrcode = ''
+def manager() -> object:
+    plugins_list = get_plugins(plugins)
+    plugins_list_cfg = [configs.config.get('Plugins', 'mod_builder')]
 
-    def __call__(self) -> dict:
-        qr = qrcode.make(self.to_qrcode)
-        io = BytesIO()
-        #qr.save('test_qr.png')
-        qr.save(io, format='png')
-        io.seek(0)
-        b64 = base64.b64encode(io.getvalue()).decode('utf-8')
+    out = None
+    if configs.config.getboolean('Options', 'nobuilder', fallback=False):
+        return out
 
-        return {f'qrcode_{self.get_name()}': b64}
+    for p in plugins_list_cfg:
+        key = 'autoinvoice.mod_builder.plugins.{}'.format(p)
+        try:
+            out = plugins_list[key].get()
+        except KeyError as e:
+            pass
 
-    @pure_virtual
-    def get_name(self):
-        return IQRCode.__name__
-
-@pure_virtual
-def get() -> IQRCode:
-    # Suppose to return class not allocation
-    return IQRCode
+    return out

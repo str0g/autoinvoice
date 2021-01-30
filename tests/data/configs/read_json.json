@@ -1,0 +1,11 @@
+[Plugins]
+mod_company_register = apiregon2
+mod_invoice_numbering = dummy_static
+
+[Paths]
+template = tests/data/templates/read_json.tex
+database = tests/data/dbase.db
+
+[Refere]
+taxpayerid = 5222680297
+name = Łukasz Buśko

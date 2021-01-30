@@ -34,7 +34,7 @@ from autoinvoice import configs
 
 test_config = 'tests/data/config'
 test_config_apiregon = 'tests/data/config_apiregon'
-test_template = 'tests/data/template1.tex'
+test_template = 'tests/data/templates/companies_only.tex'
 test_text_tex = 'tests/data/text-{}.tex'
 
 class TestOptions(unittest.TestCase):
@@ -57,7 +57,8 @@ class TestOptions(unittest.TestCase):
             sys.argv.remove('--verbose')
         reload_configuration_to_defaults()
         default = {'generate': None, 'update': None, 'configuration': 'does-not-exist',
-                'database': None, 'template': None, 'output': None, 'taxpayerid': None, 'items': None, 'verbose': False}
+                'database': None, 'template': None, 'output': None, 'taxpayerid': None,
+                'items': None, 'verbose': False, 'nobuilder': False}
 
         self.assertDictEqual(configs.options.__dict__, default)
 
@@ -330,6 +331,5 @@ class TestInputValidation(unittest.TestCase):
         self.maxDiff = None
         self.assertListEqual(out, exp)
 
-        filex = '/tmp/text-{}.tex'.format(tab[0])
-        self.assertTrue(filecmp.cmp(test_text_tex.format(tab[0]), filex))
-        remove(filex)
+        self.assertTrue(filecmp.cmp(test_text_tex.format(tab[0]), output))
+        remove(output)

@@ -39,5 +39,5 @@ class PathToNumber(IFace):
         return '{}/{}'.format(number, path[0])
 
 
-def get():
+def get() -> object:
     return PathToNumber

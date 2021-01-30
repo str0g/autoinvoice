@@ -34,9 +34,9 @@ from autoinvoice import configs
 from .utils import set_default_config, reload_configuration_to_defaults
 from .cmdline_creator import CmdlineCreator
 
-template = 'tests/data/template_qrcode.tex'
-config = 'tests/data/config_qrcode_zbp2d'
-path_json = 'tests/data/items1.json'
+template = 'tests/data/templates/qrcode.tex'
+config = 'tests/data/configs/zbp2d.json'
+items = 'tests/data/items1.json'
 
 
 class TestGetQRCode_simple(unittest.TestCase):
@@ -48,19 +48,12 @@ class TestGetQRCode_simple(unittest.TestCase):
             'ref_companyname': 'GUNS4HIRE',
             'total': str(amount)
         }
-
-        self.database_path = '/tmp/.autoinvoice'
-        self.database = '{}/dbase.db'.format(self.database_path)
         #
-        set_default_config()
+        reload_configuration_to_defaults(config)
         configs.config.set('Plugins', 'mod_qrcodes', 'zbp2d')
         if not 'zbp2d' in configs.config.sections():
             configs.config.add_section('zbp2d')
         configs.config.set('zbp2d', 'country_iso', 'PL')
-
-
-    def tearDown(self):
-        rmtree(self.database_path, ignore_errors=True)
 
     def test_qrcode_encode_decode(self):
         cmp_data = self.default_data.copy()
@@ -110,17 +103,8 @@ class TestGetQRCode_simple(unittest.TestCase):
             qt = Zbp2d(cmp_data)()
 
     def test_template(self):
-        Path(self.database_path).mkdir(exist_ok=True)
-        copyfile('tests/data/dbase.db', self.database)
-        path_config = '{}/{}'.format(self.database_path, 'config_qrcode_zbp2d')
-        test_template = '{}/{}'.format(self.database_path, 'template_qrcode.tex')
-
-        copyfile(template, test_template)
-        copyfile(config, path_config)
-
         cc = CmdlineCreator(
-            {'configuration': config, 'generate': ['5261040828'], 'verbose': False, 'items': path_json},
-            {'-d': self.database},
+            {'configuration': config, 'generate': ['5261040828'], 'verbose': False, 'items': items},
         )
 
         code, out = cc.run()
@@ -152,7 +136,7 @@ class TestGetQRCode_simple(unittest.TestCase):
 \\setemail{lukasz.busko@guns4hire.cc}
 \\setaccountnumber{93 1140 2004 0000 3203 0062 1961}
 \\setdeadline{10}
-\\setinvoicenumber{/repos}
+\\setinvoicenumber{DummyStatic}
 
 \\setreceivername{GŁÓWNY URZĄD STATYSTYCZNY}
 \\setreceiveraddress{ul. Test-Krucza 208 \\\\ 00-925 Warszawa}
@@ -170,7 +154,7 @@ class TestGetQRCode_simple(unittest.TestCase):
 \\setwithqrcodes
 \\setqrcodebankpayment{qrcode.png}
 \\begin{filecontents*}{qrcode.64}
-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
+iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCAQAAAABUY/ToAAADr0lEQVR4nO2cTa7jKhCFTzWWMsTSXUCWgnfQS4ruzmApWcCT8NAS1nkDKP/kpif9EsXJqxolxp/AUqmgTgFC/J2lX38JAkYaaaSRRhpppJHHI6VZB6R+FiTpAIwiSD0gw9hBhlHfGl48WiMPSQaSZAbkcj0R8JMAvrSX0nkSAI4kyT35itEaeUhy1PiS+lmA8UQkadEHGLv6Vg1Vj+rTyA8lQwbkkufqUow1GLmfEsAhRmvkAcju5j8BQtKZkBDXZw/t08jPItWHPAGMANIAoLrP+FUkZFAAV4hx703v9Z1GPp1MIiLSA3LJjusCqP4KGZABc03LHtWnkR9CgnsDfAGZHUkWMHoSS0q2sfhe32nk88jqQ5rbO/3FAjKrh0VfwAhHRizP3us7jXweqR4BVJEIgWXxnBaWEFg2EpL5kJH3SUd+V/HHsenUABjHDvzuAQCzIJ1JGR7Vp5EfQUKlZ0fA76NPdmSEI0J221csDhl5hwychHEUkctVhHE8EcAsdRoDgLoUipitXmbk3uqcxSSOgM8AUDoBZmHqXUH6ncF0LqitIc+vHK2RRyQ3uX2dskJ2bekcfQG5xqF9lm9zmZE35NiB3+e1UE8C44kyVI1RdceQDzFaI49E6ppaFaD6LGpGr62LerRISBaHjFRbNUZ1FQB1yspuKxwBbqcevdd3Gvk8UtdDS5CpEck3nXpdI7VpzKvaaD5kpNo9TXqtcGzU6ei3erb5kJGLcWMZzYdagQxoJVhNziwOGXnHbuplujwqOo3VX5rb18zffMjIra3SkBZUC3QDCLRav+wHqaUP8yEjt7bm9s03dPK6adAQZHOZkbfWXAVuEaHXTfhLbMoqHJGW2xv5B9JPwugnEemXMxx+qvteRfpZELhs+3hQn0Z+BrlZD61/NY93XEWilqt52nrIyL0te+9nITDXvxKuAtZnvnRMPQTh2kFCXg53vNd3Gvk8clvraAXVttWsNoeldU9YHDJyMe5tdRqdy9SlqiN5fdF8yEg1zcsA7BOxTUPIwKaaZj5k5B2yStS5PZQBAJJ0bT9I28fYtOva+p7faeQTyc29HwDgC+TCSeRCrZwlEal3Ej2qTyM/g7y9s6FaEleAsQdS/0+Hduheb3T4r30a+eFkW/ZM9SwZee1qCGqzmt0/ZOSt/bj3A34Sop0N6hBi6QgAEvIXEPLXK0dr5IHJ9d6PAY4i/SwyjKd69rXWOto513JDvmK0Rh6KFLvj3EgjjTTSSCON/J+T/wLW3lOnFLDvxgAAAABJRU5ErkJggg==
 \\end{filecontents*}
 
 \\begin{document}

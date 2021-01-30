@@ -5,7 +5,7 @@ key=abcde12345abcde12345
 [Paths]
 database=/tmp/.autoinvoice/dbase.db
 #leave empty to use one provided in small buisness set, package(polishinvoice https://github.com/str0g/polishinvoice)
-template=tests/data/template1.tex
+template=tests/data/templates/companies_only.tex
 
 [Plugins]
 mod_company_register = apiregon
