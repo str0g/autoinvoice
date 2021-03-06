@@ -1,0 +1,29 @@
+{
+  "pattern": "\\additem {{{description}}} {{{quantity}}} {{{price}}} {{{amount} PLN}} {{{tax}}} {{{total} PLN}}",
+  "items": [
+    {
+      "description": "Invoice for programing A",
+      "quantity": 160,
+      "amount": 100.00,
+      "tax": 23
+    },
+    {
+      "description": "Invoice for programing B",
+      "quantity": 184,
+      "amount": 125.44,
+      "tax": 23
+    },
+    {
+      "description": "Invoice for firearms training",
+      "quantity": 1,
+      "amount": 304.00,
+      "tax": 23
+    }
+  ],
+  "override":
+  {
+    "setpaymentdeadline": "8",
+    "setinvoicedate": "\\setinvoicedate{28 luty 2021}",
+    "overridedateofissue": "\\overridedateofissue{01.03.2021}"
+  }
+}

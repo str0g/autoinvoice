@@ -21,6 +21,8 @@
 from decimal import Decimal, getcontext, ROUND_HALF_UP
 from os import linesep
 
+from autoinvoice import configs
+
 
 class ItemBuilder:
     def __init__(self, items: dict):
@@ -30,22 +32,26 @@ class ItemBuilder:
         self.total = Decimal(0)
         self.tax = Decimal(0)
         self.items = ''
+        self.override_template = ''
         for item in items['items']:
-            if 'quantity' in item:
-                self.with_quantity(item)
-            else:
-                self.with_out_quantity(item)
+            if not 'quantity' in item:
+                item['quantity'] = 1
+            self.count(item)
         self.tax = self.total - self.subtotal
+
+        if 'override' in items:
+            self.override(items)
 
     def __call__(self) -> dict:
         return {
             'items': self.items,
             'subtotal': str(self.subtotal.quantize(Decimal('1.00'))),
             'tax': str(self.tax.quantize(Decimal('1.00'))),
-            'total': str(self.total.quantize(Decimal('1.00')))
+            'total': str(self.total.quantize(Decimal('1.00'))),
+            'override': self.override_template
         }
 
-    def with_quantity(self, item: dict):
+    def count(self, item: dict):
         tax = item['tax']
         price = Decimal(item['amount']).quantize(Decimal('1.00'))
         quantity = Decimal(item['quantity']).quantize(Decimal('1.00'))
@@ -63,17 +69,15 @@ class ItemBuilder:
             'total': amount_with_tax.quantize(Decimal('1.00'))
             }) + linesep
 
-    def with_out_quantity(self, item: dict):
-        tax = item['tax']
-        amount = Decimal(item['amount'])
-        amount_with_tax = amount * Decimal('1.{}'.format(tax))
+    def override(self, items):
+        _dict = items['override']
+        opt = _dict.get('setpaymentdeadline')
+        if opt:
+            configs.config.set('Refere', 'payment_deadline', opt)
+        opt = _dict.get('setinvoicedate')
+        if opt:
+            self.override_template += opt + '\n'
 
-        self.subtotal += amount
-        self.total += amount_with_tax
-        self.items += self.item_pattern.format(**{
-            'description': item['description'],
-            'amount': amount.quantize(Decimal('1.00')),
-            'tax': tax,
-            'total': amount_with_tax.quantize(Decimal('1.00'))
-            }) + linesep
-
+        opt = _dict.get('overridedateofissue')
+        if opt:
+            self.override_template += opt + '\n'

@@ -35,7 +35,8 @@ class ConfigurationCreator:
             'database': expanduser('~/.autoinvoice/dbase.db'),
             'template': '/usr/share/polishinvoice/templates/simple.tex',
             'verbose': False,
-            'email': ''
+            'email': '',
+            'payment_deadline': 10,
         }
         if input_options:
             self.input_options.update(input_options)
@@ -59,6 +60,7 @@ taxpayerid = {taxpayerid}
 name = {name}
 account_number = {account_number}
 email = {email}
+payment_deadline = {payment_deadline}
 
 [Options]\
 '''

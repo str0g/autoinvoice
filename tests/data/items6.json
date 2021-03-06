@@ -1,0 +1,27 @@
+{
+  "pattern": "\\additem {{{description}}} {{{quantity}}} {{{price}}} {{{amount} PLN}} {{{tax}}} {{{total} PLN}}",
+  "items": [
+    {
+      "description": "Invoice for programing A",
+      "quantity": 160,
+      "amount": 100.00,
+      "tax": 23
+    },
+    {
+      "description": "Invoice for programing B",
+      "quantity": 184,
+      "amount": 125.44,
+      "tax": 23
+    },
+    {
+      "description": "Invoice for firearms training",
+      "quantity": 1,
+      "amount": 304.00,
+      "tax": 23
+    }
+  ],
+  "override":
+  {
+    "account_number": "p0wn3d!"
+  }
+}

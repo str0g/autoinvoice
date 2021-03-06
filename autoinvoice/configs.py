@@ -120,6 +120,7 @@ def get_configuration(options):
                             'name': '',
                             'account_number': '',
                             'email': '',
+                            'payment_deadline': '10',
                         },
             })
     config.read([options.configuration], encoding='utf-8')

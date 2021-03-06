@@ -39,6 +39,8 @@ tests/data/
 |____dbase.sql
 |____items3.json
 |____items4.json
+|____items5.json
+|____items6.json
 |____sample1.xml
 |____items1.json
 ```
@@ -101,8 +103,9 @@ Application configuration is being design to provide configuration for plugins i
 
 ### Items reader
 
-- ```read_json``` - if autoinvoice parameter ```-i some_file.json``` will be provided plugin is going to generate proper invoice,
-count taxes and other amounts (refer to templates in tests/data).
+- ```read_json``` - if autoinvoice parameter ```-i some_file.json``` has been used provided plugin is going to generate proper invoice,
+fields like count, taxes, amounts, total, additionally thru this file is possible to pass payment deadline and change
+  invoice dates (refer to templates in tests/data).
 
 ### Qrcodes for payment transactions
 
