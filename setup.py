@@ -52,12 +52,12 @@ setup(
             'License :: GPL License',
         ],
         install_requires=[
-            'RegonAPI',
-            'litex.regon',
-            'requests',
-            'qrcode',
-            'pillow',
-            'opencv-python'
+            'RegonAPI==1.1.1',
+            'litex.regon==1.0.5',
+            'requests==2.26.0',
+            'qrcode==7.3.1',
+            'pillow==8.3.2',
+            'opencv-python==4.5.3.56'
         ],
         include_package_data=True,
         test_suite='tests',
