@@ -43,7 +43,7 @@ class TestPathToNumber(unittest.TestCase):
 
     def test_path(self):
         ptn = PathToNumber()
-        self.assertEqual('/repos', ptn())
+        self.assertEqual(os.sep + os.path.basename(os.path.dirname(os.getcwd())), ptn())
 
     def test_real_path(self):
         with TemporaryDirectory() as tmpdir:

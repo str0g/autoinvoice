@@ -33,7 +33,7 @@ from .utils import set_default_config, default_configs_string, reload_configurat
 from autoinvoice import configs
 
 test_config = 'tests/data/config'
-test_config_apiregon = 'tests/data/config_apiregon'
+test_config_apiregon = 'tests/data/configs/apiregon.json'
 test_template = 'tests/data/templates/companies_only.tex'
 test_text_tex = 'tests/data/text-{}.tex'
 
