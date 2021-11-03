@@ -35,7 +35,7 @@ def get_description():
 
 setup(
         name='AutoInvoice',
-        version='1.2.0',
+        version='1.3.0',
         author='Łukasz Buśko',
         author_email='busko.lukasz@pm.me',
         description='Invoice template generator, with plugins for downloading business clients information basin on tax payer id',

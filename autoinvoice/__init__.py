@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 #################################################################################
 
-VERSION = (1,0,0)
+VERSION = (1,3,0)
 
 __version__ = VERSION
 __versionstr__ = '.'.join(map(str, VERSION))
