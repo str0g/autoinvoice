@@ -41,14 +41,11 @@ class TestDataBase(unittest.TestCase):
 
     def test_isTables(self):
         db = DataBase(self.path_db)
-        self.assertTrue(db.isTables())
+        self.assertTrue(db.is_table('companies'))
 
-    def test_createTables_neg(self):
+    def test_createTables_nothing_should_happen(self):
         db = DataBase(self.path_db)
-        try:
-            db.createTables()
-        except sqlite3.OperationalError as e:
-            self.assertEqual(str(e), 'table companies already exists')
+        db.database_1_00()
 
     def test_insert(self):
         db = DataBase(self.path_db)
@@ -93,4 +90,20 @@ class TestDataBase(unittest.TestCase):
             db.update(data_in)
             self.assertEqual(data_in, db.getRecord('5261040828'))
 
+    def test_version_to_db_format(self):
+        self.assertEqual(3232235777, DataBase.version_to_db_format(self=None, version='192.168.1.1'))
+        self.assertEqual(256, DataBase.version_to_db_format(self=None, version='1.00'))
+        self.assertEqual(266, DataBase.version_to_db_format(self=None, version='1.10'))
+        self.assertEqual(286, DataBase.version_to_db_format(self=None, version='1.30'))
+        self.assertEqual(65537, DataBase.version_to_db_format(self=None, version='1.00.1'))
 
+    def test_version_from_db(self):
+        self.assertEqual('192.168.1.1', DataBase.version_from_db_format(self=None, version=3232235777))
+        self.assertEqual('1.00', DataBase.version_from_db_format(self=None, version=256))
+        self.assertEqual('1.10', DataBase.version_from_db_format(self=None, version=266))
+        self.assertEqual('1.30', DataBase.version_from_db_format(self=None, version=286))
+        self.assertEqual('1.00.1', DataBase.version_from_db_format(self=None, version=65537))
+
+    def test_db_version_1_00_migration(self):
+         db = DataBase(self.path_db)
+         self.assertEqual('1.00', db.get_version())
