@@ -56,7 +56,7 @@ setup(
             'litex.regon==1.0.5',
             'requests==2.26.0',
             'qrcode==7.3.1',
-            'pillow==8.3.2',
+            'pillow==9.0.0',
             'opencv-python==4.5.3.56'
         ],
         include_package_data=True,
