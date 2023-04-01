@@ -24,7 +24,7 @@ import sqlite3
 
 from autoinvoice.mod_company_register.database import DataBase
 
-data_in = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
+data_in = {'taxpayerid': '5261040828', 'phone_number': None, 'email': None, 'regon': '000331501', 'customername': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
 
 
 class TestDataBase(unittest.TestCase):
@@ -41,7 +41,7 @@ class TestDataBase(unittest.TestCase):
 
     def test_isTables(self):
         db = DataBase(self.path_db)
-        self.assertTrue(db.is_table('companies'))
+        self.assertTrue(db.is_table('customers'))
 
     def test_createTables_nothing_should_happen(self):
         db = DataBase(self.path_db)
@@ -75,7 +75,7 @@ class TestDataBase(unittest.TestCase):
          #to test every filed
          vec = [
                  ('regon', '00123456'),
-                 ('companyname', 'the boring company'),
+                 ('customername', 'the boring company'),
                  ('address', 'space 1'),
                  ('postcode', '01000'),
                  ('city', 'Marse One'),
@@ -106,4 +106,4 @@ class TestDataBase(unittest.TestCase):
 
     def test_db_version_1_00_migration(self):
          db = DataBase(self.path_db)
-         self.assertEqual('1.00', db.get_version())
+         self.assertEqual('2.00', db.get_version())

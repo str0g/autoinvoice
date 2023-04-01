@@ -33,7 +33,7 @@ class TestGetPdfLatexSubprocess(unittest.TestCase):
             'ref_address': 'refaddress',
             'ref_city': 'refcity',
             'invoice_number': 'invoice',
-            'companyname': 'companyname',
+            'customername': 'customername',
             'address': 'address',
             'city': 'city',
         }

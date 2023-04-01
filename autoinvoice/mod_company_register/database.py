@@ -34,7 +34,8 @@ class DataBase:
         self.con = sqlite3.connect(path)
         self.cur = self.con.cursor()
         self.cur.row_factory = dict_factory
-        self.database_1_00()
+        self.migrate()
+        self.database_2_00()
 
     def __deinit__(self):
         self.con.close()
@@ -57,6 +58,61 @@ class DataBase:
             self.cur.execute('CREATE TABLE version (record int PRIMARY KEY NOT NULL UNIQUE, version int)')
             self.con.commit()
             self.update_version('1.00')
+
+    def database_2_00(self):
+        if not self.is_table('customers'):
+            self.cur.execute('''CREATE TABLE customers (
+                id INTEGER,
+                taxpayerid INTEGER NULL UNIQUE,
+                phone_number text NULL UNIQUE,
+                email text NULL UNIQUE,
+                regon text NULL UNIQUE,
+                customername text,
+                state text,
+                address text,
+                postcode text,
+                city text,
+                refere text,
+                extra_note text,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                PRIMARY KEY("id" AUTOINCREMENT)
+                )''')
+            self.con.commit()
+        if not self.is_table('version'):
+            self.cur.execute('CREATE TABLE version (record int PRIMARY KEY NOT NULL UNIQUE, version int)')
+            self.con.commit()
+            self.update_version('2.00')
+        if not self.is_table('sales'):
+            # Naive amount to get approximate value, the same goes for timestamp, for more accurent data open invoice stored in bin format
+            self.cur.execute('''CREATE TABLE sales (
+                id INTEGER,
+                customer INTEGER NOT NULL,
+                invoice_id text UNIQUE,
+                amount REAL,
+                invoice_pdf BLOB NOT NULL UNIQUE,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                FOREIGN KEY("customer") REFERENCES "customers"("id"),
+                PRIMARY KEY("id" AUTOINCREMENT)
+                )''')
+            self.con.commit()
+
+    def migrate(self):
+        if not self.is_table('sales'):
+            return
+        version = self.get_version()
+        if version == '1.00':
+            # Create what scenery to update
+            self.database_2_00()
+            self.cur.execute("SELECT * FROM companies")
+            for record in self.cur.fetchall():
+                self.cur.execute('''INSERT INTO customers
+                        (taxpayerid, regon, customername, state, address, postcode, city, refere)
+                        VALUES
+                        (:taxpayerid, :regon, :companyname, :state, :address, :postcode, :city, :refere)''', record)
+                self.con.commit()
+            self.cur.execute("DROP TABLE companies")
+            # set new version
+            self.update_version('2.00')
 
     def update_version(self, version: str):
         _version = self.version_to_db_format(version)
@@ -98,17 +154,17 @@ class DataBase:
         return '.'.join(tmp_version[rm:])
 
     def _insert(self, record: dict):
-        self.cur.execute('''INSERT INTO companies
-        (taxpayerid, regon, companyname)
+        self.cur.execute('''INSERT INTO customers
+        (taxpayerid, regon, customername)
         VALUES
-        (?,?,?)''', (record['taxpayerid'], record['regon'], record['companyname'],))
+        (?,?,?)''', (record['taxpayerid'], record['regon'], record['customername'],))
         self.con.commit()
 
     def insert(self, record: dict):
-        self.cur.execute('''INSERT INTO companies
-        (taxpayerid, regon, companyname, state, address, postcode, city, refere)
+        self.cur.execute('''INSERT INTO customers
+        (taxpayerid, regon, customername, state, address, postcode, city, refere)
         VALUES
-        (:taxpayerid, :regon, :companyname, :state, :address, :postcode, :city, :refere)''', record)
+        (:taxpayerid, :regon, :customername, :state, :address, :postcode, :city, :refere)''', record)
         self.con.commit()
 
     def update(self, record: dict):
@@ -119,13 +175,13 @@ class DataBase:
         _record = self.getRecord(record["taxpayerid"])
         _record.update(record)
 #        print(_record)
-        self.cur.execute('''UPDATE companies SET
-                regon=:regon, companyname=:companyname, state=:state, address=:address, postcode=:postcode, city=:city, refere=:refere
+        self.cur.execute('''UPDATE customers SET
+                regon=:regon, customername=:customername, state=:state, address=:address, postcode=:postcode, city=:city, refere=:refere
                 WHERE
                 taxpayerid=:taxpayerid''', _record)
         self.con.commit()
 
     def getRecord(self, TaxPayerId) -> dict:
-        self.cur.execute("SELECT taxpayerid, regon, companyname, state, address, postcode, city, refere FROM companies WHERE taxpayerid=(?)", (TaxPayerId,))
+        self.cur.execute("SELECT taxpayerid, phone_number, email, regon, customername, state, address, postcode, city, refere FROM customers WHERE taxpayerid=(?)", (TaxPayerId,))
         return self.cur.fetchone()
 

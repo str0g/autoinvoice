@@ -44,7 +44,7 @@ class ICharacterReplacer:
         _dict.update(replacer(_dict, 'ref_city'))
         _dict.update(replacer(_dict, 'address'))
         _dict.update(replacer(_dict, 'city'))
-        _dict.update(replacer(_dict, 'companyname'))
+        _dict.update(replacer(_dict, 'customername'))
 
 @pure_virtual
 def get() -> object:

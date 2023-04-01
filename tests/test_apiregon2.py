@@ -25,7 +25,7 @@ from autoinvoice.mod_company_register.plugins.apiregon2 import APIREGON2
 
 class TestAPIREGON2(unittest.TestCase):
     def test_getRecordswithAPI(self):
-        exp = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': ''}
+        exp = {'taxpayerid': '5261040828', 'regon': '000331501', 'customername': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': ''}
 
         url = 'not_production'
         key = 'abcde12345abcde12345'

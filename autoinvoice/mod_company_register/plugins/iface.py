@@ -32,13 +32,13 @@ class ICompanyRegister:
         """
         return [self.buildRecord(...)]
 
-    def buildRecord(self, taxpayerid, regon, companyname, state, address, postcode, city, refere) -> dict:
+    def buildRecord(self, taxpayerid, regon, customername, state, address, postcode, city, refere) -> dict:
         if not isinstance(taxpayerid, str):
             raise ValueError('taxpayerid is not str, {}'.format(type(taxpayerid)))
         if not isinstance(regon, str):
             raise ValueError('regon is not str, {}'.format(type(regon)))
-        if not isinstance(companyname, str):
-            raise ValueError('companyname is not str, {}'.format(type(companyname)))
+        if not isinstance(customername, str):
+            raise ValueError('name is not str, {}'.format(type(customername)))
         if not isinstance(state, str):
             raise ValueError('state is not str, {}'.format(type(state)))
         if not isinstance(address, str):
@@ -52,7 +52,7 @@ class ICompanyRegister:
         return {
                 'taxpayerid' : taxpayerid,
                 'regon' : regon,
-                'companyname' : companyname,
+                'customername' : customername,
                 'state' : state,
                 'address' : address,
                 'postcode' : postcode,
@@ -70,7 +70,7 @@ class ICompanyRegister:
         return {
                 'ref_taxpayerid' : record['taxpayerid'],
                 'ref_regon' : record['regon'],
-                'ref_companyname' : record['companyname'],
+                'ref_companyname' : record['customername'],
                 'ref_state' : record['state'],
                 'ref_address' : record['address'],
                 'ref_postcode' : record['postcode'],

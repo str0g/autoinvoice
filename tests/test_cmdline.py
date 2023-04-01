@@ -285,9 +285,9 @@ class TestInputValidation(unittest.TestCase):
 '''
         self.assertEqual(code, 0)
 
-        _taxpayer = {'taxpayerid': '5222680297', 'regon': '382921340', 'companyname': 'GUNS4HIRE ŁUKASZ BUŚKO', 'state': 'MAZOWIECKIE', 'address': 'ul. Lajosa Kossutha 12 lok. 48', 'postcode': '01-315', 'city': 'Warszawa', 'refere': 'Łukasz Buśko'}
+        _taxpayer = {'taxpayerid': '5222680297','phone_number': None, 'email': None, 'regon': '382921340', 'customername': 'GUNS4HIRE ŁUKASZ BUŚKO', 'state': 'MAZOWIECKIE', 'address': 'ul. Lajosa Kossutha 12 lok. 48', 'postcode': '01-315', 'city': 'Warszawa', 'refere': 'Łukasz Buśko'}
 
-        _stats = {'taxpayerid': tab[0], 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
+        _stats = {'taxpayerid': tab[0], 'regon': '000331501', 'customername': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
 
         exp ='''\
 {}
@@ -319,8 +319,8 @@ class TestInputValidation(unittest.TestCase):
         code, out = cc.run()
         self.assertEqual(code, 0)
 
-        #_taxpayer = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
-        _taxpayer = {'taxpayerid': '5222680297', 'regon': '382921340', 'companyname': 'GUNS4HIRE ŁUKASZ BUŚKO', 'state': 'MAZOWIECKIE', 'address': 'ul. Lajosa Kossutha 12 lok. 48', 'postcode': '01-315', 'city': 'Warszawa', 'refere': 'Łukasz Buśko'}
+        #_taxpayer = {'taxpayerid': '5261040828', 'regon': '000331501', 'customername': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
+        _taxpayer = {'taxpayerid': '5222680297', 'phone_number': None, 'email': None, 'regon': '382921340', 'customername': 'GUNS4HIRE ŁUKASZ BUŚKO', 'state': 'MAZOWIECKIE', 'address': 'ul. Lajosa Kossutha 12 lok. 48', 'postcode': '01-315', 'city': 'Warszawa', 'refere': 'Łukasz Buśko'}
 
         exp = '''\
 {}

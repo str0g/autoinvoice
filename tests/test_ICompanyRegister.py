@@ -35,7 +35,7 @@ class TestICompanyRegister(unittest.TestCase):
             self.reg.getRecords(None, None, None)
 
     def test_recordToRefere(self):
-        record_in = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
+        record_in = {'taxpayerid': '5261040828', 'regon': '000331501', 'customername': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}
 
  
         record_exp = {'ref_taxpayerid': '5261040828', 'ref_regon': '000331501', 'ref_companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'ref_state': 'MAZOWIECKIE', 'ref_address': 'ul. Test-Krucza 208', 'ref_postcode': '00-925', 'ref_city': 'Warszawa', 'ref_refere': '@TODO'}

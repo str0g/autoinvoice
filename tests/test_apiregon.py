@@ -27,9 +27,9 @@ class TestAPIREGON(unittest.TestCase):
     def test_getRecords(self):
         paths = ['tests/data/sample1.xml', 'tests/data/sample2.xml']
 
-        sample1_out = [{'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}]
+        sample1_out = [{'taxpayerid': '5261040828', 'regon': '000331501', 'customername': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': '@TODO'}]
 
-        sample2_out = [{'taxpayerid': 'nnnnnnnnnn', 'regon': 'xxxxxxxxx', 'companyname': 'AAAAAAAA', 'state': 'LUBELSKIE', 'address': 'ul. Test-Wilcza yy', 'postcode': '23-200', 'city': 'Kraśnik', 'refere': '@TODO'}, {'taxpayerid': 'nnnnnnnnnn', 'regon': 'xxxxxxxxx', 'companyname': 'GOSPODARSTWO ROLNE', 'state': 'LUBELSKIE', 'address' : 'zz', 'postcode': '23-213', 'city': 'Sulów', 'refere': '@TODO'}]
+        sample2_out = [{'taxpayerid': 'nnnnnnnnnn', 'regon': 'xxxxxxxxx', 'customername': 'AAAAAAAA', 'state': 'LUBELSKIE', 'address': 'ul. Test-Wilcza yy', 'postcode': '23-200', 'city': 'Kraśnik', 'refere': '@TODO'}, {'taxpayerid': 'nnnnnnnnnn', 'regon': 'xxxxxxxxx', 'customername': 'GOSPODARSTWO ROLNE', 'state': 'LUBELSKIE', 'address' : 'zz', 'postcode': '23-213', 'city': 'Sulów', 'refere': '@TODO'}]
 
         krs = APIREGON()
         for path in paths:
@@ -49,7 +49,7 @@ class TestAPIREGON(unittest.TestCase):
     # Implementation of litex.regon is failing on test environment and unfortunately also on production with one of my clients...
     @unittest.expectedFailure
     def test_getRecordswithAPI(self):
-        exp = {'taxpayerid': '5261040828', 'regon': '000331501', 'companyname': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': ''}
+        exp = {'taxpayerid': '5261040828', 'regon': '000331501', 'customername': 'GŁÓWNY URZĄD STATYSTYCZNY', 'state': 'MAZOWIECKIE', 'address': 'ul. Test-Krucza 208', 'postcode': '00-925', 'city': 'Warszawa', 'refere': ''}
 
         url = 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc'
         key = 'abcde12345abcde12345'
