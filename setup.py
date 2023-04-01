@@ -47,19 +47,19 @@ setup(
         long_description=get_description(),
         classifiers=[
             'Development Status :: 3 - Alpha',
-            'Programing Language :: Python 3.7',
+            'Programing Language :: Python 3.10',
             'Topic :: Utilities',
             'License :: GPL License',
         ],
         install_requires=[
-            'RegonAPI==1.1.1',
-            'litex.regon==1.0.5',
-            'requests==2.26.0',
-            'qrcode==7.3.1',
-            'pillow==8.3.2',
-            'opencv-python==4.5.3.56'
+            'RegonAPI==1.3.1',
+            'litex.regon==1.0.7',
+            'requests==2.28.2',
+            'qrcode==7.4.2',
+            'pillow==9.4.0',
+            'opencv-python==4.7.0.72'
         ],
         include_package_data=True,
         test_suite='tests',
-        python_requires='>=3.6'
+        python_requires='>=3.9'
 )
