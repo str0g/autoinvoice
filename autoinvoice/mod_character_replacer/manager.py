@@ -25,7 +25,7 @@ from ..mod_character_replacer import plugins
 from .. import configs
 
 
-def manager() -> object():
+def manager() -> object:
     """
     Plugin should be build with naming concept [extension] and placed inside plugins folder
     """

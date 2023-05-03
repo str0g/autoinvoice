@@ -25,5 +25,5 @@ class Tex(ICharacterReplacer):
     CHARACTER_TO_REPLACE = '&%$#_{}~^\\'
 
 
-def get() -> Tex:
+def get() -> object:
     return Tex
