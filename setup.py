@@ -28,7 +28,7 @@ def get_description():
     def readfile(fname):
         return open(join(dirname(__file__), fname)).read()
     description = ''
-    for fname in ('README.md', 'CONTRIBUTORS', 'LICENSE'):
+    for fname in ('README.md', 'LICENSE'):
         description += readfile(fname) + linesep + linesep
     return description
 
@@ -37,7 +37,7 @@ setup(
         name='AutoInvoice',
         version='1.3.0',
         author='Łukasz Buśko',
-        author_email='busko.lukasz@pm.me',
+        author_email='lukasz.busko@guns4hire.cc',
         description='Invoice template generator, with plugins for downloading business clients information basin on tax payer id',
         license='GPL',
         keywords='invoice invoices latex generator',
