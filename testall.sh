@@ -18,10 +18,10 @@
 #################################################################################
 
 function test {
-	$1
-#	if [ $? -ne 0 ]; then
-#		exit $?
-#	fi
+  $1
+	if [ $? -ne 0 ]; then
+		exit $?
+	fi
 }
 
 rm -r $(find . -name "__pycache__" -type d)

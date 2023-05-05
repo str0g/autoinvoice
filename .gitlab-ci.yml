@@ -1,0 +1,36 @@
+image: archlinux:base-devel-20230430.0.146624
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - pacman-key --init
+  - pacman -Syu --noconfirm --noprogressbar
+  - pacman -S --noconfirm --noprogressbar python python-pip python-setuptools python-wheel python-build python-virtualenv libglvnd texlive-bin
+  - python -m venv venv
+  - source venv/bin/activate
+  - pip install build setuptools wheel tox
+
+build:
+  stage: build
+  script:
+    - python -m build
+  artifacts:
+    paths:
+      - dist
+
+install_test:
+  stage: test
+  script:
+    - pip install dist/autoinvoice-1.3.0-py3-none-any.whl
+    - pip uninstall -y autoinvoice
+
+unittests:
+  stage: test
+  script:
+    - tox run
