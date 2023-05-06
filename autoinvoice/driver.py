@@ -124,7 +124,8 @@ class Driver:
 
     def output(self):
         if self.mod_builder and (not configs.config.getboolean('Options', 'nobuilder', fallback=False)):
+            prefix = configs.config.get('Common', 'invoice_prefix')
             inv_num = configs.config.get('Options', 'invoice_number').replace('/', '-')
-            self.mod_builder()(self.invoice, inv_num)
+            self.mod_builder()(self.invoice, prefix + inv_num)
 
         return self.invoice

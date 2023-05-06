@@ -28,6 +28,7 @@ default_configs_string = f"""\
 [Common]
 url = 
 key = 
+invoice_prefix = 
 
 [Plugins]
 mod_company_register = apiregon2

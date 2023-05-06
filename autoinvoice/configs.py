@@ -104,6 +104,7 @@ def get_configuration(options):
             'Common': {
                         'url': '',
                         'key': '',
+                        'invoice_prefix': '',
                         },
             'Plugins': {
                             'mod_company_register': 'apiregon2',

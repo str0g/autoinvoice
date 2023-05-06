@@ -37,6 +37,7 @@ class ConfigurationCreator:
             'verbose': False,
             'email': '',
             'payment_deadline': 10,
+            'invoice_prefix': '',
         }
         if input_options:
             self.input_options.update(input_options)
@@ -44,6 +45,7 @@ class ConfigurationCreator:
 [Common]
 url = {url}
 key = {key}
+invoice_prefix = {invoice_prefix}
 
 [Plugins]
 mod_company_register = {register}
