@@ -11,7 +11,7 @@ cache:
 before_script:
   - pacman-key --init
   - pacman -Syu --noconfirm --noprogressbar
-  - pacman -S --noconfirm --noprogressbar python python-pip python-setuptools python-wheel python-build python-virtualenv libglvnd texlive-bin
+  - pacman -S --noconfirm --noprogressbar python python-virtualenv libglvnd texlive-bin
   - python -m venv venv
   - source venv/bin/activate
   - pip install build setuptools wheel tox
@@ -30,7 +30,37 @@ install_test:
     - pip install dist/autoinvoice-1.3.0-py3-none-any.whl
     - pip uninstall -y autoinvoice
 
-unittests:
+unittests-arch:
   stage: test
   script:
-    - tox run
+    - tox run -e local
+
+unittest-fedora:
+  stage: test
+  image: fedora:37
+  before_script:
+    - dnf -y check-update && dnf -y upgrade
+    - dnf -y install python3.7
+    - python3.7 -m ensurepip --user --altinstall
+    - python3.7 -m pip install --user tox
+    - dnf -y install python3.8
+    - python3.8 -m ensurepip --user --altinstall
+    - python3.8 -m pip install --user tox
+    - dnf -y install python3.9
+    - python3.9 -m ensurepip --user --altinstall
+    - python3.9 -m pip install --user tox
+    - dnf -y install python3.10
+    - python3.10 -m ensurepip --user --altinstall
+    - python3.10 -m pip install --user tox
+    - dnf -y install libglvnd-glx texlive-latex python-tox
+  script:
+    - python3.7 -m tox run
+
+unittest-debian:
+  image: debian:11-slim
+  before_script:
+    - apt-get update -y && apt-get upgrade -y
+    - apt-get install -y python3-pip libglvnd0 texlive-latex-base
+    - python3 -m pip install tox
+  script:
+    - python3 -m tox run -e local
