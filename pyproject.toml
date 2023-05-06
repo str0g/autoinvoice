@@ -29,7 +29,21 @@ dependencies = [
         ]
 
 [tool.setuptools]
-py-modules = ["autoinvoce"]
+packages = [
+    "autoinvoice",
+    "autoinvoice.mod_builder",
+    "autoinvoice.mod_builder.plugins",
+    "autoinvoice.mod_character_replacer",
+    "autoinvoice.mod_character_replacer.plugins",
+    "autoinvoice.mod_company_register",
+    "autoinvoice.mod_company_register.plugins",
+    "autoinvoice.mod_invoice_numbering",
+    "autoinvoice.mod_invoice_numbering.plugins",
+    "autoinvoice.mod_items_reader",
+    "autoinvoice.mod_items_reader.plugins",
+    "autoinvoice.mod_qrcode",
+    "autoinvoice.mod_qrcode.plugins",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/str0g/autoinvoice"
