@@ -29,7 +29,7 @@ from .utils import reload_configuration_to_defaults, use_temporary_directory
 
 template = 'tests/data/templates/qrcode.tex'
 config = 'tests/data/configs/pdflatex_subprocess.ini'
-items = 'tests/data/items1.json'
+items = 'tests/data/items/items1.json'
 
 
 class TestGetPdfLatexSubprocess(unittest.TestCase):

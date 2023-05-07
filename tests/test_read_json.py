@@ -27,8 +27,8 @@ from autoinvoice import configs
 
 template = 'tests/data/templates/read_json.tex'
 config = 'tests/data/configs/read_json.ini'
-items = 'tests/data/items2.json'
-items2 = 'tests/data/items5.json'
+items = 'tests/data/items/items2.json'
+items2 = 'tests/data/items/items5.json'
 
 
 class TestReadJson(unittest.TestCase):
@@ -37,7 +37,7 @@ class TestReadJson(unittest.TestCase):
         reload_configuration_to_defaults(config)
 
     def test_read_json(self):
-        paths = ['tests/data/items1.json', 'tests/data/items2.json']
+        paths = ['tests/data/items/items1.json', 'tests/data/items/items2.json']
         dicts = [{
             'items': '\\additem {item1} {109.50 PLN} {23} {134.69 PLN}\n'
                      '\\additem {next item} {57.00 PLN} {0} {57.00 PLN}\n',
@@ -61,7 +61,7 @@ class TestReadJson(unittest.TestCase):
             self.assertDictEqual(out, dicts[index])
 
     def test_read_json_detailed(self):
-        paths = ['tests/data/items4.json']
+        paths = ['tests/data/items/items4.json']
         dicts = [
             {
             'items': '\\additem {Invoice for programing A} {160.00} {100.00} {16000.00 PLN} {23} {19680.00 PLN}\n'
@@ -79,7 +79,7 @@ class TestReadJson(unittest.TestCase):
             self.assertDictEqual(out, dicts[index])
 
     def test_read_json_override(self):
-        paths = ['tests/data/items5.json']
+        paths = ['tests/data/items/items5.json']
         dicts = [
             {
             'items': '\\additem {Invoice for programing A} {160.00} {100.00} {16000.00 PLN} {23} {19680.00 PLN}\n'
@@ -103,12 +103,12 @@ class TestReadJson(unittest.TestCase):
         self.assertEqual(configs.config.get('Refere', 'payment_deadline'), '8')
 
     def test_read_json_neg(self):
-        configs.config.set('Options', 'items', 'tests/data/items1.csv')
+        configs.config.set('Options', 'items', 'tests/data/items/items1.csv')
         with self.assertRaises(KeyError):
             manager()
 
     def test_replace_bank_account_number(self):
-        paths = ['tests/data/items6.json']
+        paths = ['tests/data//items/items6.json']
         number = '0123456789012345678902345'
         configs.config.set('Refere', 'account_number', number)
         dicts = [
