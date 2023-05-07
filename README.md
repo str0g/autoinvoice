@@ -17,32 +17,33 @@ Development
 ### Resource for tests
 Resources for tests should be used to build proper application configuration.
 ```
-tests/data/
-├── config
+tests/data
 ├── configs
-│   ├── apiregon.json
-│   ├── config.json
-│   ├── path_to_number.json
-│   ├── pdflatex_subprocess.json
-│   ├── read_json.json
-│   └── zbp2d.json
+│   ├── apiregon2.ini
+│   ├── apiregon.ini
+│   ├── config.ini
+│   ├── path_to_number.ini
+│   ├── pdflatex_subprocess.ini
+│   ├── read_json.ini
+│   └── zbp2d.ini
 ├── dbase.db
 ├── dbase.sql
 ├── dbase_table.sql
-├── items1.json
-├── items2.json
-├── items3.json
-├── items4.json
-├── items5.json
-├── items6.json
+├── items
+│   ├── items1.json
+│   ├── items2.json
+│   ├── items3.json
+│   ├── items4.json
+│   ├── items5.json
+│   └── items6.json
 ├── sample1.xml
 ├── sample2.xml
-├── template_path_to_number.tex
-├── templates
-│   ├── companies_only.tex
-│   ├── qrcode.tex
-│   └── read_json.tex
-└── text-5261040828.tex
+└── templates
+    ├── companies_only.tex
+    ├── qrcode.tex
+    ├── read_json.tex
+    ├── template_path_to_number.tex
+    └── text-5261040828.tex
 ```
 
 ### Storing new test data for later dbase usage
@@ -64,11 +65,14 @@ Usage
 
  Configuration
 -----------
-Configuration file should be located in ~/.autoinvoice/config
+Configuration file should be located in ~/.autoinvoice/config.ini
+
+- default configuration options can be found in `configs.py:get_configuration`
+- each plugin my have its own special options which can be defined in `config.ini`
 
 Shell alias
 -----------
-Its very handy to create alias like
+It's very handy to create alias like
 
 ``alias autoinvoices="python3 -m autoinvoice"``
 
