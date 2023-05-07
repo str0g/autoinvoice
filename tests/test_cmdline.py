@@ -35,7 +35,7 @@ from autoinvoice import configs
 test_config = 'tests/data/configs/config.ini'
 test_config_apiregon = 'tests/data/configs/apiregon.ini'
 test_template = 'tests/data/templates/companies_only.tex'
-test_text_tex = 'tests/data/text-{}.tex'
+test_text_tex = 'tests/data/templates/text-{}.tex'
 
 class TestOptions(unittest.TestCase):
     def test_tax_ref(self):

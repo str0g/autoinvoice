@@ -28,7 +28,7 @@ from autoinvoice.mod_invoice_numbering.plugins.path_to_number import PathToNumbe
 from .cmdline_creator import CmdlineCreator
 from .utils import reload_configuration_to_defaults
 
-template = 'tests/data/template_path_to_number.tex'
+template = 'tests/data/templates/template_path_to_number.tex'
 config = 'tests/data/configs/path_to_number.ini'
 
 
