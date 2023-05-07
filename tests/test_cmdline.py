@@ -32,8 +32,8 @@ from .cmdline_creator import CmdlineCreator
 from .utils import set_default_config, default_configs_string, reload_configuration_to_defaults
 from autoinvoice import configs
 
-test_config = 'tests/data/config'
-test_config_apiregon = 'tests/data/configs/apiregon.json'
+test_config = 'tests/data/configs/config.ini'
+test_config_apiregon = 'tests/data/configs/apiregon.ini'
 test_template = 'tests/data/templates/companies_only.tex'
 test_text_tex = 'tests/data/text-{}.tex'
 

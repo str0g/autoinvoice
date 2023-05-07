@@ -29,7 +29,7 @@ from .cmdline_creator import CmdlineCreator
 from .utils import reload_configuration_to_defaults
 
 template = 'tests/data/template_path_to_number.tex'
-config = 'tests/data/configs/path_to_number.json'
+config = 'tests/data/configs/path_to_number.ini'
 
 
 class TestPathToNumber(unittest.TestCase):
@@ -67,7 +67,7 @@ class TestPathToNumber(unittest.TestCase):
         Path(self.database_path).mkdir(exist_ok=True)
         os.makedirs('{}/202006/03_tmp_dir'.format(self.database_path))
         copyfile('tests/data/dbase.db', self.database)
-        config_path_to_number = '{}/{}'.format(self.database_path, 'config')
+        config_path_to_number = '{}/{}'.format(self.database_path, 'config.ini')
         test_template = '{}/{}'.format(self.database_path, 'companies_only.tex')
         copyfile(config, config_path_to_number)
         copyfile(template, test_template)

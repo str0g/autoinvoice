@@ -35,7 +35,7 @@ from .utils import set_default_config, reload_configuration_to_defaults
 from .cmdline_creator import CmdlineCreator
 
 template = 'tests/data/templates/qrcode.tex'
-config = 'tests/data/configs/zbp2d.json'
+config = 'tests/data/configs/zbp2d.ini'
 items = 'tests/data/items1.json'
 
 

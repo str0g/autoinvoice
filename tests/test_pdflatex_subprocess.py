@@ -28,7 +28,7 @@ from autoinvoice.driver import Driver
 from .utils import reload_configuration_to_defaults, use_temporary_directory
 
 template = 'tests/data/templates/qrcode.tex'
-config = 'tests/data/configs/pdflatex_subprocess.json'
+config = 'tests/data/configs/pdflatex_subprocess.ini'
 items = 'tests/data/items1.json'
 
 

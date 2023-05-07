@@ -24,7 +24,7 @@ from autoinvoice.driver import Driver
 from autoinvoice import configs
 from .utils import reload_configuration_to_defaults, use_temporary_directory
 
-config = 'tests/data/configs/config.json'
+config = 'tests/data/configs/apiregon2.ini'
 
 
 class TestDriver(unittest.TestCase):

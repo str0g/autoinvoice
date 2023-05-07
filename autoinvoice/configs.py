@@ -42,7 +42,7 @@ def get_options():
     parser.add_option("-u", "--update", action="append", type="int",
             help="Update records for Taxpayerid, can be used multiple times")
     parser.add_option("-c", "--configuration", type="string",
-            default="~/.autoinvoice/config",
+            default="~/.autoinvoice/config.ini",
             help="Configuration file")
     parser.add_option("-d", "--database", type="string",
             help="Data base path")

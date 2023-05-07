@@ -26,7 +26,7 @@ from .cmdline_creator import CmdlineCreator
 from autoinvoice import configs
 
 template = 'tests/data/templates/read_json.tex'
-config = 'tests/data/configs/read_json.json'
+config = 'tests/data/configs/read_json.ini'
 items = 'tests/data/items2.json'
 items2 = 'tests/data/items5.json'
 
