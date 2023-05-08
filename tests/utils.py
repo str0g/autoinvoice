@@ -72,7 +72,7 @@ def use_temporary_directory(func):
     def inner(*args, **kwargs):
         from tempfile import TemporaryDirectory
         with TemporaryDirectory() as tmpdirname:
-            from_database = 'tests/data/dbase.db'
+            from_database = 'tests/data/dbases/dbase.db'
             to_database = join(tmpdirname, 'dbase.db')
             copyfile(from_database, to_database)
             #

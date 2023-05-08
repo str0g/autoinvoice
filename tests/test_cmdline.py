@@ -105,7 +105,7 @@ class TestInputValidation(unittest.TestCase):
         self.database_path = '/tmp/.autoinvoice'
         Path(self.database_path).mkdir(exist_ok=True)
         self.database = '{}/dbase.db'.format(self.database_path)
-        copyfile('tests/data/dbase.db', self.database)
+        copyfile('tests/data/dbases/dbase.db', self.database)
 
         self.default_config_output = ConfigurationCreator().get_configuration()
 

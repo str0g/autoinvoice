@@ -108,7 +108,7 @@ class TestReadJson(unittest.TestCase):
             manager()
 
     def test_replace_bank_account_number(self):
-        paths = ['tests/data//items/items6.json']
+        paths = ['tests/data/items/items6.json']
         number = '0123456789012345678902345'
         configs.config.set('Refere', 'account_number', number)
         dicts = [

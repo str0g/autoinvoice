@@ -66,7 +66,7 @@ class TestPathToNumber(unittest.TestCase):
     def test_feel_template(self):
         Path(self.database_path).mkdir(exist_ok=True)
         os.makedirs('{}/202006/03_tmp_dir'.format(self.database_path))
-        copyfile('tests/data/dbase.db', self.database)
+        copyfile('tests/data/dbases/dbase.db', self.database)
         config_path_to_number = '{}/{}'.format(self.database_path, 'config.ini')
         test_template = '{}/{}'.format(self.database_path, 'companies_only.tex')
         copyfile(config, config_path_to_number)
