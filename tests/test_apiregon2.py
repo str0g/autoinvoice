@@ -21,6 +21,8 @@
 import unittest
 
 from autoinvoice.mod_company_register.plugins.apiregon2 import APIREGON2
+from requests.exceptions import ConnectionError
+import requests
 
 
 class TestAPIREGON2(unittest.TestCase):
@@ -31,6 +33,15 @@ class TestAPIREGON2(unittest.TestCase):
         key = 'abcde12345abcde12345'
 
         krs = APIREGON2()
-        out = krs.getRecords(exp['taxpayerid'], url, key)[0]
+        try:
+            out = krs.getRecords(exp['taxpayerid'], url, key)[0]
+        except IndexError:
+            try:
+                requests.get("https://guns4hire.cc")
+            except ConnectionError:
+                print("Network not available!")
+                return
+
+
 
         self.assertDictEqual(exp, out)

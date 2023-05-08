@@ -21,6 +21,7 @@
 from enum import IntEnum
 
 from RegonAPI import RegonAPI, ApiAuthenticationError
+from requests.exceptions import ConnectionError
 
 from autoinvoice.mod_company_register.plugins.iface import ICompanyRegister
 
@@ -101,7 +102,9 @@ class APIREGON2(ICompanyRegister):
         except ApiAuthenticationError as e:
             print(e)
         except ValueError as e:
-            print (e)
+            print(e)
+        except ConnectionError as e:
+            print(e)
 
         return out
 

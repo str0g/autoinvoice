@@ -19,7 +19,7 @@
 #################################################################################
 
 from litex.regon import REGONAPI, REGONAPIError
-from requests.exceptions import MissingSchema
+from requests.exceptions import MissingSchema, ConnectionError
 
 from autoinvoice.mod_company_register.plugins.iface import ICompanyRegister
 
@@ -64,6 +64,8 @@ class APIREGON(ICompanyRegister):
                 print("RegonAPI {} for session: {}, tax:{}, url:{}, key:{}".format(e, session, TaxPayerId, url, key))
             except MissingSchema as e:
                 print("RegonAPI {} for session: {}, tax:{}, url:{}, key:{}".format(e, session, TaxPayerId, url, key))
+            except ConnectionError as e:
+                print(e)
             finally:
                 if session:
                     api.logout()
