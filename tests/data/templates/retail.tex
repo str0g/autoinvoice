@@ -1,0 +1,36 @@
+\documentclass[polish]{{article}}
+
+\usepackage{{polski}}
+\usepackage[utf8]{{inputenc}}
+\usepackage{{fullpage}}
+\usepackage[polish]{{polishinvoice}}
+\usepackage{{bookmark}}
+
+\setdetailedinvoice{{true}}
+
+\pagestyle{{empty}}
+\setinvoicetitle{{Faktura}}
+
+\setname{{{ref_companyname}}}
+\setourref{{{ref_refere}}}
+\setaddress{{{ref_address} \\ {ref_postcode} {ref_city}}}
+\setcompanyid{{{ref_taxpayerid}}}
+\setaccountnumber{{{ref_account_number}}}
+\setdeadline{{{ref_payment_deadline}}}
+\setinvoicenumber{{{invoice_number}}}
+
+\setreceivername{{{customername}}}
+\setreceiveraddress{{{address} \\ {postcode} {city}}}
+
+{items}
+\setsubtotal{{{subtotal} PLN}}
+\setvat{{{tax} PLN}}
+\settotal{{{total} PLN}}
+
+{override}
+
+\begin{{document}}
+
+\makeinvoice
+
+\end{{document}}

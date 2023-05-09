@@ -182,6 +182,15 @@ class DataBase:
         self.con.commit()
 
     def getRecord(self, TaxPayerId) -> dict:
-        self.cur.execute("SELECT taxpayerid, phone_number, email, regon, customername, state, address, postcode, city, refere FROM customers WHERE taxpayerid=(?)", (TaxPayerId,))
+        if TaxPayerId[0] == "+":
+            self.cur.execute(
+                "SELECT taxpayerid, phone_number, email, regon, customername, state, address, postcode, city, refere FROM customers WHERE phone_number=(?)",
+                (TaxPayerId,))
+        elif TaxPayerId.find("@") > 0:
+            self.cur.execute(
+                "SELECT taxpayerid, phone_number, email, regon, customername, state, address, postcode, city, refere FROM customers WHERE email=(?)",
+                (TaxPayerId,))
+        else:
+            self.cur.execute("SELECT taxpayerid, phone_number, email, regon, customername, state, address, postcode, city, refere FROM customers WHERE taxpayerid=(?)", (TaxPayerId,))
         return self.cur.fetchone()
 

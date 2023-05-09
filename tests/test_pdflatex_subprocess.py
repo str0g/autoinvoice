@@ -58,6 +58,6 @@ class TestGetPdfLatexSubprocess(unittest.TestCase):
         configs.reload_configuraiton()
 
         driver = Driver()
-        driver.fill_invoice_template(5222680297)
+        driver.fill_invoice_template("5222680297")
 
         self.assertIsNotNone(driver.output())

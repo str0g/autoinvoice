@@ -1,0 +1,17 @@
+{
+  "pattern": "\\additem {{{description}}} {{{quantity}}} {{{price}}} {{{amount} PLN}} {{{tax}}} {{{total} PLN}}",
+  "items": [
+    {
+      "description": "B&T SPC-9 Magwell",
+      "quantity": 1,
+      "amount": 121.95,
+      "tax": 23
+    }
+  ],
+  "override":
+  {
+    "setpaymentdeadline": "8",
+    "setinvoicedate": "\\setinvoicedate{08 maj 2023}",
+    "overridedateofissue": "\\overridedateofissue{08.05.2023}"
+  }
+}

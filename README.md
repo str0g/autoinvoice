@@ -8,7 +8,8 @@ Check ```setup.py``` script
 
 Known issues
 --------------------
-- Current version of litex.regon does not fetch well short regon numbers so tests depending on it my crash.
+- Current version of litex.regon does not fetch well short regon numbers so tests
+depending on it my crash.
 - Linux compatible only unless someone provide port.
 
 Development
@@ -17,7 +18,7 @@ Development
 ### Resource for tests
 Resources for tests should be used to build proper application configuration.
 ```
-tests/data
+tests/data/
 ├── configs
 │   ├── apiregon2.ini
 │   ├── apiregon.ini
@@ -25,23 +26,27 @@ tests/data
 │   ├── path_to_number.ini
 │   ├── pdflatex_subprocess.ini
 │   ├── read_json.ini
+│   ├── retail.ini
 │   └── zbp2d.ini
-├── dbase.db
-├── dbase.sql
-├── dbase_table.sql
+├── dbases
+│   ├── dbase.db
+│   ├── dbase.sql
+│   └── dbase_table.sql
 ├── items
 │   ├── items1.json
 │   ├── items2.json
 │   ├── items3.json
 │   ├── items4.json
 │   ├── items5.json
-│   └── items6.json
+│   ├── items6.json
+│   └── items7.json
 ├── sample1.xml
 ├── sample2.xml
 └── templates
     ├── companies_only.tex
     ├── qrcode.tex
     ├── read_json.tex
+    ├── retail.tex
     ├── template_path_to_number.tex
     └── text-5261040828.tex
 ```
@@ -54,11 +59,13 @@ or
 >``.du``
 
 ### Restoring database
-sqlite3 dbase.db < dbase.sql
+`sqlite3 dbase.db < dbase.sql`
 
-### prepering input for build record
-Input expects python str other ways application may not work correctly and tests are going to fail.
-So its very important to check encoding and data type returned by chosen data provider.
+### Preparing input for build record
+Input expects python str other ways' application may not work correctly and tests are
+going to fail.
+So It's very important to check encoding and data type returned by chosen data
+provider.
 
 Usage
 ===========
@@ -92,7 +99,24 @@ Every folder has similar pattern
 │   │   ├── __init__.py
 │   │   ├── some_implementation.py
 ```
-Application configuration is being design to provide configuration for plugins if needed. To get more information check tests/data
+Application configuration is being design to provide configuration for plugins if
+needed. To get more information check tests/data
+
+### Retail
+It's possible to get client record with phone number or email but database
+needs to be open w `sqlitebrowser` or other tool to inject data.
+- sample with direct sql operation
+```
+sqlite3 dbase.db "insert into customers
+(phone_number, email, customername, state, address, postcode, city, refere, extra_note)
+values
+('+48189807150','jan.brzechwa@wieszcze.pl','Jan Brzechwa','Winnicki','ul. Brzechwy 42','66-666','Żmerynka','Jan Brzechwa','WZM22')"
+```
+
+
+### Offline usage
+It's possible to use application with our network. User can see warning in few places
+but invoice is going to be generated as expected as long as client record is in database.
 
 ### Company register
 
@@ -107,8 +131,10 @@ Application configuration is being design to provide configuration for plugins i
 
 ### Items reader
 
-- ```read_json``` - if autoinvoice parameter ```-i some_file.json``` has been used provided plugin is going to generate proper invoice,
-fields like count, taxes, amounts, total, additionally thru this file is possible to pass payment deadline and change
+- ```read_json``` - if autoinvoice parameter ```-i some_file.json``` has been used
+provided plugin is going to generate proper invoice,
+fields like count, taxes, amounts, total, additionally thru this file is possible
+to pass payment deadline and change
   invoice dates (refer to templates in tests/data).
 
 ### Qrcodes for payment transactions

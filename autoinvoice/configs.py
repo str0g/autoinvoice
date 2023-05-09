@@ -37,7 +37,7 @@ def tax_ref(option, opt_str, value, parser):
 
 def get_options():
     parser = OptionParser()
-    parser.add_option("-g", "--generate", action="append", type="int",
+    parser.add_option("-g", "--generate", action="append", type="string",
             help="Input Taxpayerid and generate document template, can be used multiple times")
     parser.add_option("-u", "--update", action="append", type="int",
             help="Update records for Taxpayerid, can be used multiple times")
@@ -59,9 +59,6 @@ def get_options():
             help="Verbouse")
 
     (options, args) = parser.parse_args()
-
-    if options.generate:
-        options.generate = [str(g) for g in options.generate]
 
     if options.configuration.find('~') != -1:
         options.configuration = expanduser(options.configuration)
