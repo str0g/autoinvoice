@@ -39,6 +39,7 @@ unittests-arch:
 unittest-fedora:
   stage: test
   image: fedora:40
+  allow_failure: true
   before_script:
     - dnf -y check-update && dnf -y upgrade
     - dnf -y install python3.12

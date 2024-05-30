@@ -1,6 +1,6 @@
 RegonAPI==1.3.1
 litex.regon==1.0.7
-requests==2.31.0
+requests==2.32.0
 qrcode==7.4.2
-pillow==9.4.0
-opencv-python==4.7.0.72
+pillow==10.3.0
+opencv-python==4.9.0.80
