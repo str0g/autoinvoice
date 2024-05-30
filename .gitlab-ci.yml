@@ -1,4 +1,4 @@
-image: archlinux:base-devel-20230430.0.146624
+image: archlinux:base-devel-20240101.0.204074
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -34,34 +34,25 @@ install_test:
 unittests-arch:
   stage: test
   script:
-    - tox run -e local
+    - python -m tox run
 
 unittest-fedora:
   stage: test
-  image: fedora:37
+  image: fedora:40
   before_script:
     - dnf -y check-update && dnf -y upgrade
-    - dnf -y install python3.7
-    - python3.7 -m ensurepip --user --altinstall
-    - python3.7 -m pip install --user tox
-    - dnf -y install python3.8
-    - python3.8 -m ensurepip --user --altinstall
-    - python3.8 -m pip install --user tox
-    - dnf -y install python3.9
-    - python3.9 -m ensurepip --user --altinstall
-    - python3.9 -m pip install --user tox
-    - dnf -y install python3.10
-    - python3.10 -m ensurepip --user --altinstall
-    - python3.10 -m pip install --user tox
+    - dnf -y install python3.12
+    - python3.12 -m ensurepip --user --altinstall
+    - python3.12 -m pip install --user tox
     - dnf -y install libglvnd-glx texlive-latex python-tox
   script:
-    - python3.7 -m tox run
+    - python3 -m tox run
 
 unittest-debian:
-  image: debian:11-slim
+  stage: test
+  image: debian:12-slim
   before_script:
     - apt-get update -y && apt-get upgrade -y
-    - apt-get install -y python3-pip libglvnd0 texlive-latex-base
-    - python3 -m pip install tox
+    - apt-get install -y python3-pip libglvnd0 texlive-latex-base tox
   script:
-    - python3 -m tox run -e local
+    - python3 -m tox run
