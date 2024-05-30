@@ -23,6 +23,7 @@ build:
   artifacts:
     paths:
       - dist
+    expire_in: 1 week
 
 install_test:
   stage: test
@@ -30,11 +31,15 @@ install_test:
     - pip install dist/autoinvoice-1.3.0-py3-none-any.whl
     - mkdir void && cd void && python -m autoinvoice --help
     - pip uninstall -y autoinvoice
+  dependencies:
+    - build
 
 unittests-arch:
   stage: test
   script:
     - python -m tox run
+  dependencies:
+    - build
 
 unittest-fedora:
   stage: test
@@ -48,6 +53,8 @@ unittest-fedora:
     - dnf -y install libglvnd-glx texlive-latex python-tox
   script:
     - python3 -m tox run
+  dependencies:
+    - build
 
 unittest-debian:
   stage: test
@@ -57,3 +64,5 @@ unittest-debian:
     - apt-get install -y python3-pip libglvnd0 texlive-latex-base tox
   script:
     - python3 -m tox run
+  dependencies:
+    - build
