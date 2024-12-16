@@ -1,4 +1,4 @@
-image: archlinux:base-devel-20240101.0.204074
+image: archlinux:base-devel-20241208.0.286830
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -40,10 +40,11 @@ unittests-arch:
     - python -m tox run
   dependencies:
     - build
+  parallel: 2
 
 unittest-fedora:
   stage: test
-  image: fedora:40
+  image: fedora:41
   allow_failure: true
   before_script:
     - dnf -y check-update && dnf -y upgrade
@@ -55,10 +56,11 @@ unittest-fedora:
     - python3 -m tox run
   dependencies:
     - build
+  parallel: 2
 
 unittest-debian:
   stage: test
-  image: debian:12-slim
+  image: debian:12.8-slim
   before_script:
     - apt-get update -y && apt-get upgrade -y
     - apt-get install -y python3-pip libglvnd0 texlive-latex-base tox
@@ -66,3 +68,4 @@ unittest-debian:
     - python3 -m tox run
   dependencies:
     - build
+  parallel: 2
