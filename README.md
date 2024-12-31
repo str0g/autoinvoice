@@ -4,7 +4,14 @@ AutoInvoice
 Dependencies
 --------------------
 
-Check ```setup.py``` script
+Check ```pyproject.toml/requirements.txt``` file
+
+Deployment
+--------------------
+Prepare wheel package
+```python -m build --wheel```
+install using pipx to avoid breaking system packages
+```pipx install --include-deps autoinvoice-1.3.2-py3-none-any.whl```
 
 Known issues
 --------------------
@@ -149,3 +156,4 @@ and require additional configuration section.
 ### Builder
 
 - ```pdflatex_subprocess``` - creates pdf file as final result
+

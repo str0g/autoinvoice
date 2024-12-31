@@ -4,3 +4,4 @@ requests==2.32.3
 qrcode==8.0.0
 pillow==11.0.0
 opencv-python==4.10.0.84
+legacy-cgi==2.6.1

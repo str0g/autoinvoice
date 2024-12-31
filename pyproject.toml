@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autoinvoice"
-version = "1.3.1"
+version = "1.3.2"
 authors = [
   { name="Łukasz Buśko", email="lukasz.busko@guns4hire.cc" },
 ]
@@ -16,7 +16,7 @@ classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Operating System :: POSIX :: Linux",
   "Topic :: Utilities",
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 3 - Beta",
 ]
 keywords = ['invoice', 'invoices', 'latex generator']
 dependencies = [
@@ -26,6 +26,7 @@ dependencies = [
             'qrcode==8.0.0',
             'pillow==11.0.0',
             'opencv-python==4.10.0.84',
+            "legacy-cgi==2.6.1; python_version >= '3.13'",
         ]
 
 [tool.setuptools]
@@ -44,6 +45,9 @@ packages = [
     "autoinvoice.mod_qrcode",
     "autoinvoice.mod_qrcode.plugins",
 ]
+
+[project.scripts]
+autoinvoice = "autoinvoice.cmdline:main"
 
 [project.urls]
 "Homepage" = "https://github.com/str0g/autoinvoice"
