@@ -1,71 +1,54 @@
 image: archlinux:base-devel-20241208.0.286830
 
 variables:
+  DOCKER_REGISTRY: "localhost:5555"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
 cache:
   paths:
     - .cache/pip
-    - venv/
 
-before_script:
-  - pacman-key --init
-  - pacman -Syu --noconfirm --noprogressbar
-  - pacman -S --noconfirm --noprogressbar python python-virtualenv libglvnd texlive-bin
-  - python -m venv venv
-  - source venv/bin/activate
-  - pip install build setuptools wheel tox
-
-build:
-  stage: build
-  script:
-    - python -m build
-  artifacts:
-    paths:
-      - dist
-    expire_in: 1 week
-
-install_test:
+unittest-arch:
   stage: test
+  image: localhost:5555/archlinux_autoinvoice:latest
   script:
-    - pip install dist/autoinvoice-1.3.2-py3-none-any.whl
-    - mkdir void && cd void && python -m autoinvoice --help
-    - pip uninstall -y autoinvoice
-  dependencies:
-    - build
+    - tox run
 
-unittests-arch:
+pip_install_test:
   stage: test
+  image: localhost:5555/archlinux_autoinvoice:latest
   script:
-    - python -m tox run
+    - python3 -m build --wheel
+    - pip install --break-system-packages dist/autoinvoice-1.3.2-py3-none-any.whl
+    - python -m autoinvoice --help
+    - pip uninstall -y --break-system-packages autoinvoice
   dependencies:
-    - build
-  parallel: 2
+    - unittest-arch
+
+pipx_install_test:
+  stage: test
+  image: localhost:5555/archlinux_autoinvoice:latest
+  script:
+    - export PATH="${PATH}:/root/.local/bin"
+    - python3 -m build --wheel
+    - pipx install dist/autoinvoice-1.3.2-py3-none-any.whl
+    - autoinvoice --help
+    - pipx uninstall autoinvoice
+  dependencies:
+    - unittest-arch
 
 unittest-fedora:
   stage: test
-  image: fedora:41
+  image: localhost:5555/fedora41_autoinvoice:latest
   allow_failure: true
-  before_script:
-    - dnf -y check-update && dnf -y upgrade
-    - dnf -y install python3.12
-    - python3.12 -m ensurepip --user --altinstall
-    - python3.12 -m pip install --user tox
-    - dnf -y install libglvnd-glx texlive-latex python-tox
   script:
     - python3 -m tox run
-  dependencies:
-    - build
-  parallel: 2
+    - python3 -m build --wheel
 
 unittest-debian:
   stage: test
-  image: debian:12.8-slim
-  before_script:
-    - apt-get update -y && apt-get upgrade -y
-    - apt-get install -y python3-pip libglvnd0 texlive-latex-base tox
+  image: localhost:5555/debian_autoinvoice:latest
   script:
     - python3 -m tox run
-  dependencies:
-    - build
-  parallel: 2
+    - python3 -m build --wheel
+

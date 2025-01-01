@@ -1,0 +1,19 @@
+services:
+  arch_autoinvoice:
+    container_name: archlinux_autoinvoice
+    build:
+      context: .
+      dockerfile: ./arch/Dockerfile
+    image: archlinux_autoinvoice:latest
+  fedora41_autoinvoice:
+    container_name: fedora41_autoinvoice
+    build:
+      context: .
+      dockerfile: ./fedora/Dockerfile
+    image: fedora41_autoinvoice:latest
+  debian_autoinvoice:
+    container_name: debian_autoinvoice
+    build:
+      context: .
+      dockerfile: ./debian/Dockerfile
+    image: debian_autoinvoice:latest
